@@ -1,0 +1,3 @@
+intdsdas xasdasd = 1233 ;
+
+print(x) ;
