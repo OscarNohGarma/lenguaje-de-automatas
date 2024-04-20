@@ -1,3 +1,2 @@
-intdsdas xasdasd = 1233 ;
-
-print(x) ;
+intdsdas xasdasd = 1233 ;;;
+print (( xr )) ;;; 

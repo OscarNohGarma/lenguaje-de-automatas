@@ -71,95 +71,169 @@ public class CatScanner {
         char next = simbolos.get(punteroInicial);
         int i = 0;
         boolean error = false;
+        StringBuilder lexema;
 
-        while (i < simbolos.size() && !error) {
-            i++;
-            next = simbolos.get(punteroInicial);
-            System.out.println("----------------" + next);
-            // ? Validación de palabras reservadas
-            if (Character.isLetter(next)) {
-                punteroRecorrido = punteroInicial;
-                // System.out.println(next + " es una letra.");
-                while (punteroRecorrido < simbolos.size()) {
+        try {
+            while (i < simbolos.size() && !error) {
+                i++;
+                next = simbolos.get(punteroInicial);
+                System.out.println("---- Caracter actual: " + next + "----");
+                lexema = new StringBuilder();
+                // ? Validación de palabras reservadas
+                if (Character.isLetter(next)) {
+                    punteroRecorrido = punteroInicial;
 
-                    next = simbolos.get(punteroRecorrido);
-                    if (next == ' ') {
-                        System.out.println("CADENA ACEPTADA");
-                        punteroInicial = punteroRecorrido + 1;
-                        System.out.println("puntero inicial ahora es :" + punteroInicial);
-                        break;
-                    }
-                    if (!Character.isLetter(next)) {
-                        System.out.println("NO ES UNA LETRA");
-                        error = true;
-                        break;
-                    }
-                    System.out.println(next);
-                    // Lógica del autómata
-                    //
-                    //
-                    //
-                    punteroRecorrido += 1;
-                }
-            } else if (Character.isDigit(next)) {
-                punteroRecorrido = punteroInicial;
-                while (punteroRecorrido < simbolos.size()) {
+                    while (punteroRecorrido < simbolos.size()) {
 
-                    next = simbolos.get(punteroRecorrido);
-                    if (next == ' ') {
-                        System.out.println("CADENA ACEPTADA");
-                        punteroInicial = punteroRecorrido + 1;
-                        System.out.println("puntero inicial ahora es :" + punteroInicial);
-                        break;
-                    }
-                    if (!Character.isDigit(next)) {
-                        System.out.println("NO ES UN DIGITO");
-                        error = true;
-                        break;
-                    }
-                    System.out.println(next);
-                    // Lógica del autómata
-                    //
-                    //
-                    //
-                    punteroRecorrido += 1;
-                }
-            } else if (Character.isISOControl(next)) {
-                if (next == '\n') {
-                    System.out.println(next + " es un salto de línea.");
-                } else if (next == '\r') {
-                    System.out.println(next + " es un retorno de carro.");
-                } else {
-                    System.out.println(next + " es un símbolo de control.");
-                }
-            } else if (next == ' ') {
-                System.out.println(next + " es un espacio en blanco.");
-            } else if (next == '=') {
-                punteroRecorrido = punteroInicial;
-                while (punteroRecorrido < simbolos.size()) {
+                        next = simbolos.get(punteroRecorrido);
+                        if (Character.isWhitespace(next) || next == '(' || next == ')' || next == '{' || next == '}'
+                                || next == '[' || next == ']') {
+                            System.out.println("CADENA ACEPTADA: " + lexema);
+                            punteroInicial = punteroRecorrido + 1;
+                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
 
-                    next = simbolos.get(punteroRecorrido);
-                    if (next == ' ') {
-                        System.out.println("CADENA ACEPTADA");
-                        punteroInicial = punteroRecorrido + 1;
-                        System.out.println("puntero inicial ahora es :" + punteroInicial);
-                        break;
-                    }
-                    if (next == '=') {
-                        if (simbolos.get(punteroRecorrido + 1) != ' ') {
-                            System.out.println("NO ES VÁLIDO");
+                            // Lógica del autómata
+                            //
+                            //
+                            //
+
+                            break;
+                        }
+                        if (!Character.isLetter(next)) {
+                            // !Error
+                            System.out.println(next + " NO ES UNA LETRA");
                             error = true;
                             break;
                         }
+                        // System.out.println(next);
+
+                        lexema.append(next);
+                        punteroRecorrido += 1;
                     }
-                    System.out.println(next);
-                    // Lógica del autómata
-                    //
-                    //
-                    //
-                    punteroRecorrido += 1;
+                } else if (Character.isDigit(next)) {
+                    punteroRecorrido = punteroInicial;
+                    while (punteroRecorrido < simbolos.size()) {
+
+                        next = simbolos.get(punteroRecorrido);
+                        if (Character.isWhitespace(next)) {
+                            System.out.println("CADENA ACEPTADA: " + lexema);
+                            punteroInicial = punteroRecorrido + 1;
+                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+
+                            // Lógica del autómata
+                            //
+                            //
+                            //
+                            System.out.println();
+
+                            break;
+                        }
+                        if (!Character.isDigit(next)) {
+                            // !Error
+                            System.out.println(next + " NO ES UN DIGITO");
+                            error = true;
+                            break;
+                        }
+                        // System.out.println(next);
+
+                        lexema.append(next);
+                        punteroRecorrido += 1;
+                    }
+                } else if (Character.isISOControl(next)) {
+                    // punteroRecorrido = punteroInicial;
+                    if (next == '\n') {
+                        System.out.println(next + "es un salto de linea.");
+                        punteroInicial += 1;
+                    }
+                } else if (Character.isWhitespace(next)) {
+                    System.out.println(next + " es un espacio en blanco o salto de linea.");
+                } else if (next == '=' || next == '+' || next == '-') {
+                    punteroRecorrido = punteroInicial;
+                    while (punteroRecorrido < simbolos.size()) {
+
+                        next = simbolos.get(punteroRecorrido);
+                        if (Character.isWhitespace(next)) {
+                            System.out.println("CADENA ACEPTADA: " + lexema);
+                            punteroInicial = punteroRecorrido + 1;
+                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+
+                            // Lógica del autómata
+                            //
+                            //
+                            //
+
+                            break;
+                        }
+                        if (next != '=') {
+                            // !Error
+                            System.out.println(next + " NO ES VÁLIDO");
+                            error = true;
+                            break;
+                        }
+                        lexema.append(next);
+                        // System.out.println(next);
+                        punteroRecorrido += 1;
+                    }
+                } else if (next == '(' || next == ')' || next == '{' || next == '}' || next == '[' || next == ']') {
+                    punteroRecorrido = punteroInicial;
+                    while (punteroRecorrido < simbolos.size()) {
+
+                        next = simbolos.get(punteroRecorrido);
+                        if (Character.isWhitespace(next)) {
+                            System.out.println("CADENA ACEPTADA: " + lexema);
+                            punteroInicial = punteroRecorrido + 1;
+                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+
+                            // // Lógica del autómata
+                            // //
+                            // //
+                            // //
+
+                            break;
+                        }
+                        if (next != '(' && next != ')' && next != '{' && next != '}' && next != '[' && next != ']') {
+                            // !Error
+                            System.out.println(next + " NO ES VÁLIDO");
+                            error = true;
+                            break;
+
+                        }
+
+                        lexema.append(next);
+                        // System.out.println(next);
+                        punteroRecorrido += 1;
+                    }
+                } else if (next == ';') {
+                    punteroRecorrido = punteroInicial;
+                    while (punteroRecorrido < simbolos.size()) {
+
+                        next = simbolos.get(punteroRecorrido);
+                        if (Character.isWhitespace(next)) {
+                            System.out.println("CADENA ACEPTADA: " + lexema);
+                            punteroInicial = punteroRecorrido + 1;
+                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+
+                            // Lógica del autómata
+                            //
+                            //
+                            //
+
+                            break;
+                        }
+                        if (next != ';') {
+                            // !Error
+                            System.out.println(next + " NO ES VÁLIDO");
+                            error = true;
+                            break;
+                        }
+                        // System.out.println(next);
+                        lexema.append(next);
+                        punteroRecorrido += 1;
+                    }
                 }
             }
+        } catch (Exception e) {
+            System.out.println("Fin del archivo");
         }
 
         // try (BufferedReader br = new BufferedReader(new FileReader(file))) {
