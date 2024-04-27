@@ -90,13 +90,12 @@ public class CatScanner {
                                 || next == '[' || next == ']') {
                             System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
-                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+                            System.out.println("puntero inicial ahora es :" + punteroInicial);
 
                             // Lógica del autómata
-                            //
-                            //
-                            //
-
+                            Automata automata = new Automata(lexema.toString());
+                            classifyString(automata.checkAutomata());
+                            System.out.println("\n");
                             break;
                         }
                         if (!Character.isLetter(next)) {
@@ -118,12 +117,12 @@ public class CatScanner {
                         if (Character.isWhitespace(next)) {
                             System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
-                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+                            System.out.println("puntero inicial ahora es :" + punteroInicial);
 
                             // Lógica del autómata
-                            //
-                            //
-                            //
+                            Automata automata = new Automata(lexema.toString());
+                            classifyString(automata.checkAutomata());
+                            System.out.println("\n");
                             System.out.println();
 
                             break;
@@ -155,12 +154,12 @@ public class CatScanner {
                         if (Character.isWhitespace(next)) {
                             System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
-                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+                            System.out.println("puntero inicial ahora es :" + punteroInicial);
 
                             // Lógica del autómata
-                            //
-                            //
-                            //
+                            Automata automata = new Automata(lexema.toString());
+                            classifyString(automata.checkAutomata());
+                            System.out.println("\n");
 
                             break;
                         }
@@ -182,12 +181,12 @@ public class CatScanner {
                         if (Character.isWhitespace(next)) {
                             System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
-                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+                            System.out.println("puntero inicial ahora es :" + punteroInicial);
 
                             // // Lógica del autómata
-                            // //
-                            // //
-                            // //
+                            Automata automata = new Automata(lexema.toString());
+                            classifyString(automata.checkAutomata());
+                            System.out.println("\n");
 
                             break;
                         }
@@ -211,12 +210,12 @@ public class CatScanner {
                         if (Character.isWhitespace(next)) {
                             System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
-                            System.out.println("puntero inicial ahora es :" + punteroInicial + "\n");
+                            System.out.println("puntero inicial ahora es :" + punteroInicial);
 
                             // Lógica del autómata
-                            //
-                            //
-                            //
+                            Automata automata = new Automata(lexema.toString());
+                            classifyString(automata.checkAutomata());
+                            System.out.println("\n");
 
                             break;
                         }
@@ -270,6 +269,42 @@ public class CatScanner {
         // } catch (IOException e) {
         // e.printStackTrace();
         // }
+    }
+
+    public void classifyString(int input) {
+        switch (input) {
+            case 1:
+                System.out.println("Es un Operador Aritmético");
+                break;
+
+            case 2:
+                System.out.println("Es un Operador Lógico");
+                break;
+
+            case 3:
+                System.out.println("Es un Tipo de Dato");
+                break;
+
+            case 4:
+                System.out.println("Es una Palabra reservada");
+                break;
+
+            case 5:
+                System.out.println("Es un Signo de Agrupación");
+                break;
+
+            case 6:
+                System.out.println("Es una Variable");
+                break;
+
+            case 7:
+                System.out.println("Son Números");
+                break;
+
+            default:
+                System.out.println("ERROR CADENA NO VALIDA PARA CLASIFICAR");
+                break;
+        }
     }
 
 }
