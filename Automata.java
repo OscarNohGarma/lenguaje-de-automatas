@@ -31,7 +31,9 @@ public class Automata {
         transitionsFrom0.put('g', 74);
         transitionsFrom0.put('t', 86);
         transitionsFrom0.put('(', 90);
-        transitionsFrom0.put('{', 93);
+        transitionsFrom0.put(')', 91);
+        transitionsFrom0.put('{', 92);
+        transitionsFrom0.put('}', 93);
         transitionsFrom0.put('L', 96);
         transitionsFrom0.put('D', 97);
 
@@ -135,16 +137,11 @@ public class Automata {
         transitions.put(88, Map.of('e', 89));
         transitions.put(89, Map.of('L', 96));
 
-        transitions.put(90, Map.of('L', 91, 'D', 91, ' ', 91, '\t', 91, '\n', 91));
-        transitions.put(91, Map.of('L', 91, 'D', 91, ' ', 91, '\t', 91, '\n', 91, ')', 92));
-        transitions.put(93, Map.of('L', 94, 'D', 94, ' ', 94, '\t', 94, '\n', 94));
-        transitions.put(94, Map.of('L', 94, 'D', 94, ' ', 94, '\t', 94, '\n', 94, '}', 95));
-
         transitions.put(96, Map.of('L', 96, 'D', 96));
         transitions.put(97, Map.of('D', 97));
 
         Set<Integer> acceptingStates = Set.of(1, 2, 3, 4, 5, 9, 11, 12, 13, 19, 22, 27, 31, 38, 41, 45, 46, 50, 55, 57,
-                61, 66, 73, 85, 89, 91, 92, 94, 95, 96, 97);
+                61, 66, 73, 85, 89, 90, 91, 92, 93, 94, 95, 96, 97);
 
         // Autómata
         DFAChecker dfaChecker = new DFAChecker(transitions, acceptingStates, 0);

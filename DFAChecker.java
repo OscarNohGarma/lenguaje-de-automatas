@@ -78,7 +78,7 @@ public class DFAChecker {
                 finalState = 4;
 
                 // Signos de agrupación
-            } else if (currentState == 91 || currentState == 92 || currentState == 94 || currentState == 95) {
+            } else if (currentState == 90 || currentState == 91 || currentState == 92 || currentState == 93) {
                 finalState = 5;
 
                 // Variables
