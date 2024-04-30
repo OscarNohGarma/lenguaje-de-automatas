@@ -83,12 +83,12 @@ public class CatScanner {
                 // ? Validación de palabras reservadas
                 if (Character.isLetter(next)) {
                     punteroRecorrido = punteroInicial;
-
+                    
                     while (punteroRecorrido < simbolos.size()) {
-
+                        
                         next = simbolos.get(punteroRecorrido);
                         if (Character.isWhitespace(next) || next == '(' || next == ')' || next == '{' || next == '}'
-                                || next == '[' || next == ']') {
+                        || next == '[' || next == ']') {
                             System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
                             System.out.println("puntero inicial ahora es :" + punteroInicial);
