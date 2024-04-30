@@ -82,14 +82,18 @@ public class DFAChecker {
                 finalState = 5;
 
                 // Variables
-            }else if (currentState == 96) {
+            } else if (currentState == 96) {
                 finalState = 6;
 
                 // Números
-            }else if (currentState == 97) {
+            } else if (currentState == 97) {
                 finalState = 7;
             }
-            
+            // else if (currentState == 98) {
+            // // 98 es "
+            // finalState = 8;
+            // }
+
             return finalState;
         } else {
             return -1;

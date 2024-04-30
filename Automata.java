@@ -5,7 +5,7 @@ import java.util.Set;
 public class Automata {
     private String input;
 
-    public Automata (String input) {
+    public Automata(String input) {
         this.input = input;
     }
 
@@ -36,6 +36,7 @@ public class Automata {
         transitionsFrom0.put('}', 93);
         transitionsFrom0.put('L', 96);
         transitionsFrom0.put('D', 97);
+        // transitionsFrom0.put('"', 98);
 
         transitions.put(0, transitionsFrom0);
 
@@ -137,7 +138,7 @@ public class Automata {
         transitions.put(88, Map.of('e', 89));
         transitions.put(89, Map.of('L', 96));
 
-        transitions.put(96, Map.of('L', 96, 'D', 96));
+        transitions.put(96, Map.of('L', 96, 'D', 97));
         transitions.put(97, Map.of('D', 97));
 
         Set<Integer> acceptingStates = Set.of(1, 2, 3, 4, 5, 9, 11, 12, 13, 19, 22, 27, 31, 38, 41, 45, 46, 50, 55, 57,

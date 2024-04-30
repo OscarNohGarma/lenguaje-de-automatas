@@ -78,6 +78,7 @@ public class CatScanner {
                 i++;
                 next = simbolos.get(punteroInicial);
                 System.out.println("---- Caracter actual: " + next + "----");
+                simbolos.get(punteroInicial + 1);
                 lexema = new StringBuilder();
                 // ? Validación de palabras reservadas
                 if (Character.isLetter(next)) {
@@ -98,9 +99,9 @@ public class CatScanner {
                             System.out.println("\n");
                             break;
                         }
-                        if (!Character.isLetter(next)) {
+                        if (!Character.isLetter(next) && !Character.isDigit(next)) {
                             // !Error
-                            System.out.println(next + " NO ES UNA LETRA");
+                            System.out.println(next + " NO ES UN CARACTER");
                             error = true;
                             break;
                         }
@@ -202,6 +203,40 @@ public class CatScanner {
                         // System.out.println(next);
                         punteroRecorrido += 1;
                     }
+                } else if (next == '"') {
+                    punteroRecorrido = punteroInicial;
+                    next = simbolos.get(punteroRecorrido);
+                    lexema.append(next);
+                    while (punteroRecorrido < simbolos.size()) {
+
+                        // System.out.println("asdasdasd " + simbolos.get(punteroRecorrido + 1));
+                        // System.out.println(next);
+                        punteroRecorrido += 1;
+                        next = simbolos.get(punteroRecorrido);
+                        lexema.append(next);
+                        if (simbolos.get(punteroRecorrido + 1) == '"') {
+
+                            lexema.append(simbolos.get(punteroRecorrido + 1));
+                            punteroInicial = punteroRecorrido + 3;
+
+                            // Lógica del autómata
+                            // Automata automata = new Automata(lexema.toString());
+                            // classifyString(automata.checkAutomata());
+                            System.out.println("CADENA ACEPTADA: " + lexema);
+                            System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            classifyString(8);
+                            System.out.println("\n");
+
+                            break;
+                        }
+                        if (next != ' ' && next != '"' && !Character.isLetter(next) && !Character.isDigit(next)) {
+                            // !Error
+                            System.out.println(next + " NO ES VÁLIDO");
+                            error = true;
+                            break;
+                        }
+
+                    }
                 } else if (next == ';') {
                     punteroRecorrido = punteroInicial;
                     while (punteroRecorrido < simbolos.size()) {
@@ -299,6 +334,9 @@ public class CatScanner {
 
             case 7:
                 System.out.println("Son Números");
+                break;
+            case 8:
+                System.out.println("Es una cadena de texto");
                 break;
 
             default:
