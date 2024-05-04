@@ -83,12 +83,12 @@ public class CatScanner {
                 // ? Validación de palabras reservadas
                 if (Character.isLetter(next)) {
                     punteroRecorrido = punteroInicial;
-                    
+
                     while (punteroRecorrido < simbolos.size()) {
-                        
+
                         next = simbolos.get(punteroRecorrido);
                         if (Character.isWhitespace(next) || next == '(' || next == ')' || next == '{' || next == '}'
-                        || next == '[' || next == ']') {
+                                || next == '[' || next == ']') {
                             System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
                             System.out.println("puntero inicial ahora es :" + punteroInicial);
@@ -224,7 +224,7 @@ public class CatScanner {
                             // classifyString(automata.checkAutomata());
                             System.out.println("CADENA ACEPTADA: " + lexema);
                             System.out.println("puntero inicial ahora es :" + punteroInicial);
-                            classifyString(8);
+                            classifyString(9);
                             System.out.println("\n");
 
                             break;
@@ -335,7 +335,12 @@ public class CatScanner {
             case 7:
                 System.out.println("Son Números");
                 break;
+
             case 8:
+                System.out.println("Es un valor de tipo Booleano");
+                break;
+
+            case 9:
                 System.out.println("Es una cadena de texto");
                 break;
 

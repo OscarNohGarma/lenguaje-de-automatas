@@ -72,9 +72,9 @@ public class DFAChecker {
                 finalState = 3;
 
                 // Palabras reservadas
-            } else if (currentState == 31 || currentState == 45 || currentState == 46 || currentState == 50
+            } else if (currentState == 45 || currentState == 46 || currentState == 50
                     || currentState == 55 || currentState == 57 || currentState == 61 || currentState == 73
-                    || currentState == 66 || currentState == 85 || currentState == 89) {
+                    || currentState == 66 || currentState == 85) {
                 finalState = 4;
 
                 // Signos de agrupación
@@ -88,6 +88,10 @@ public class DFAChecker {
                 // Números
             } else if (currentState == 97) {
                 finalState = 7;
+
+                // Valor de tipo Booleano
+            } else if (currentState == 31 || currentState == 89) {
+                finalState = 8;
             }
             // else if (currentState == 98) {
             // // 98 es "
