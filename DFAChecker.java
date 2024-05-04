@@ -57,13 +57,15 @@ public class DFAChecker {
 
         if (finalStates.contains(currentState)) {
             int finalState = 0;
-            // Operadores aritméticos
-            if (currentState == 1 || currentState == 2 || currentState == 3 || currentState == 4
+            // Operadores aritméticos (+ , -, *,
+            if (currentState == 1 || currentState == 3 || currentState == 4
                     || currentState == 5 || currentState == 6) {
                 finalState = 1;
 
-                // Operadores lógicos
-            } else if (currentState == 9 || currentState == 11 || currentState == 12 || currentState == 13) {
+            }
+
+            // Operadores lógicos
+            else if (currentState == 9 || currentState == 11 || currentState == 12 || currentState == 13) {
                 finalState = 2;
 
                 // Tipos de datos
@@ -77,12 +79,10 @@ public class DFAChecker {
                     || currentState == 66 || currentState == 85) {
                 finalState = 4;
 
-                // Signos de agrupación
-            } else if (currentState == 90 || currentState == 91 || currentState == 92 || currentState == 93) {
-                finalState = 5;
+            }
 
-                // Variables
-            } else if (currentState == 96) {
+            // Variables
+            else if (currentState == 96) {
                 finalState = 6;
 
                 // Números
@@ -93,10 +93,32 @@ public class DFAChecker {
             } else if (currentState == 31 || currentState == 89) {
                 finalState = 8;
             }
-            // else if (currentState == 98) {
-            // // 98 es "
-            // finalState = 8;
-            // }
+
+            // Igualación =
+            else if (currentState == 2) {
+
+                finalState = 10;
+            }
+
+            // Signo de agrupación (
+            else if (currentState == 90) {
+                finalState = 11;
+            }
+
+            // Signo de agrupación )
+            else if (currentState == 91) {
+                finalState = 12;
+            }
+
+            // Signo de agrupación {
+            else if (currentState == 92) {
+                finalState = 13;
+            }
+
+            // Signo de agrupación }
+            else if (currentState == 93) {
+                finalState = 14;
+            }
 
             return finalState;
         } else {

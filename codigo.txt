@@ -1,6 +1,9 @@
 int variable121 = 1233 ;
 print ( xr ) ;
-repeat 9 {
+if ( variable == 1233 ) {
+    file archivo1 = read ( "archivo.txt" )
+}
+for ( 9 ) {
 print ( "homundo" ) ;
 print ( "example cadena xd" ) ;
-}
+} 

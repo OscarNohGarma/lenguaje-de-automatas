@@ -47,6 +47,7 @@ public class Automata {
         transitions.put(9, Map.of('L', 96));
         transitions.put(10, Map.of('r', 11));
         transitions.put(11, Map.of('L', 96));
+        transitions.put(2, Map.of('=', 13)); // ==
         transitions.put(12, Map.of('=', 13));
         transitions.put(14, Map.of('t', 15));
         transitions.put(15, Map.of('r', 16, 'e', 62));
