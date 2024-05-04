@@ -42,20 +42,20 @@ public class Automata {
 
         transitions.put(2, Map.of('=', 3));
 
-        transitions.put(7, Map.of('n', 8));
+        transitions.put(7, Map.of('n', 8, 'L', 96));
         transitions.put(8, Map.of('d', 9));
         transitions.put(9, Map.of('L', 96));
-        transitions.put(10, Map.of('r', 11));
+        transitions.put(10, Map.of('r', 11, 'L', 96));
         transitions.put(11, Map.of('L', 96));
         transitions.put(2, Map.of('=', 13)); // ==
         transitions.put(12, Map.of('=', 13));
         transitions.put(14, Map.of('t', 15));
-        transitions.put(15, Map.of('r', 16, 'e', 62));
+        transitions.put(15, Map.of('r', 16, 'e', 62, 'L', 96));
         transitions.put(16, Map.of('i', 17));
         transitions.put(17, Map.of('n', 18));
         transitions.put(18, Map.of('g', 19));
         transitions.put(19, Map.of('L', 96));
-        transitions.put(20, Map.of('n', 21, 'f', 46));
+        transitions.put(20, Map.of('n', 21, 'f', 46, 'L', 96));
         transitions.put(21, Map.of('t', 22));
         transitions.put(22, Map.of('L', 96));
         transitions.put(24, Map.of('o', 25));
@@ -63,7 +63,7 @@ public class Automata {
         transitions.put(26, Map.of('t', 27));
         transitions.put(27, Map.of('L', 96));
 
-        transitions.put(23, Map.of('l', 24, 'a', 28, 'i', 39, 'o', 56, 'u', 67));
+        transitions.put(23, Map.of('l', 24, 'a', 28, 'i', 39, 'o', 56, 'u', 67, 'L', 96));
         transitions.put(24, Map.of('o', 25));
         transitions.put(25, Map.of('a', 26));
         transitions.put(26, Map.of('t', 27));
@@ -72,7 +72,7 @@ public class Automata {
         transitions.put(30, Map.of('e', 31));
         transitions.put(31, Map.of('L', 96));
 
-        transitions.put(32, Map.of('o', 33));
+        transitions.put(32, Map.of('o', 33, 'L', 96));
         transitions.put(33, Map.of('o', 34));
         transitions.put(34, Map.of('l', 35));
         transitions.put(35, Map.of('e', 36));
@@ -84,17 +84,17 @@ public class Automata {
         transitions.put(40, Map.of('e', 41));
         transitions.put(41, Map.of('L', 96));
 
-        transitions.put(42, Map.of('l', 43));
+        transitions.put(42, Map.of('l', 43, 'L', 96));
         transitions.put(43, Map.of('s', 44));
         transitions.put(44, Map.of('e', 45));
         transitions.put(45, Map.of('L', 96));
 
-        transitions.put(47, Map.of('e', 48));
+        transitions.put(47, Map.of('e', 48, 'L', 96));
         transitions.put(48, Map.of('a', 49, 't', 58));
         transitions.put(49, Map.of('d', 50));
         transitions.put(50, Map.of('L', 96));
 
-        transitions.put(51, Map.of('r', 52));
+        transitions.put(51, Map.of('r', 52, 'L', 96));
         transitions.put(52, Map.of('i', 53));
         transitions.put(53, Map.of('n', 54));
         transitions.put(54, Map.of('t', 55));
@@ -121,7 +121,7 @@ public class Automata {
         transitions.put(72, Map.of('n', 73));
         transitions.put(73, Map.of('L', 96));
 
-        transitions.put(74, Map.of('e', 75));
+        transitions.put(74, Map.of('e', 75, 'L', 96));
         transitions.put(75, Map.of('n', 76));
         transitions.put(76, Map.of('e', 77));
         transitions.put(77, Map.of('r', 78));
@@ -134,7 +134,7 @@ public class Automata {
         transitions.put(84, Map.of('e', 85));
         transitions.put(85, Map.of('L', 96));
 
-        transitions.put(86, Map.of('r', 87));
+        transitions.put(86, Map.of('r', 87, 'L', 96));
         transitions.put(87, Map.of('u', 88));
         transitions.put(88, Map.of('e', 89));
         transitions.put(89, Map.of('L', 96));
