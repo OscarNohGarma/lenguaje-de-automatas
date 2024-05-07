@@ -65,7 +65,7 @@ public class DFAChecker {
             }
 
             // Operadores lógicos
-            else if (currentState == 9 || currentState == 11 || currentState == 12 || currentState == 13) {
+            else if (currentState == 9 || currentState == 11) {
                 finalState = 2;
 
                 // Tipos de datos
@@ -118,6 +118,11 @@ public class DFAChecker {
             // Signo de agrupación }
             else if (currentState == 93) {
                 finalState = 14;
+            }
+            // Op comparación
+            else if (currentState == 12 || currentState == 13) {
+
+                finalState = 16;
             }
 
             return finalState;

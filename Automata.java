@@ -21,7 +21,7 @@ public class Automata {
         transitionsFrom0.put('a', 7);
         transitionsFrom0.put('o', 10);
         transitionsFrom0.put('!', 12);
-        transitionsFrom0.put('s', 15);
+        transitionsFrom0.put('s', 14);
         transitionsFrom0.put('i', 20);
         transitionsFrom0.put('f', 23);
         transitionsFrom0.put('b', 32);
