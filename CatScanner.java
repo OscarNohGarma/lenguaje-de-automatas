@@ -383,6 +383,10 @@ public class CatScanner {
                 System.out.println(lexema + " : Operador de comparación");
                 tokens.add("op comp");
                 break;
+            case 17:
+                System.out.println(lexema + " : Estructuras de control de flujo");
+                tokens.add("ctrl flujo");
+                break;
             default:
                 System.out.println(lexema + " : ERROR CADENA NO VALIDA PARA CLASIFICAR");
                 tokens.add("NO RECONOCIDO: " + lexema);
