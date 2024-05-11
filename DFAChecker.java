@@ -75,7 +75,7 @@ public class DFAChecker {
 
                 // Palabras reservadas
             } else if (currentState == 45 || currentState == 50 || currentState == 55 || currentState == 61
-                    || currentState == 73 || currentState == 66 || currentState == 85) {
+                    || currentState == 73 || currentState == 66 || currentState == 85 || currentState == 102) {
                 finalState = 4;
 
             }
