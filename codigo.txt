@@ -1,10 +1,10 @@
-int variable1 = 1233 + 3 ;
+boolean variable1 = 1233 + 3 ;
 string variable2 = "1233" ;
-boolean variable3 = true ;
+boolean variab/le3 = true ;
 print ( xr ) ;
 if ( variable == 1233 ) {
     file archivo1 = read ( "archivo.txt" ) ;
-    replace ( "Hola" , archivo1 ) ;
+replace ( "Hola" , archivo1 ) ;
 }
 for ( 9 ) {
 print ( "homundo" ) ;

@@ -73,7 +73,7 @@ public class DFAChecker {
                 finalState = 3;
 
                 // Palabras reservadas
-            } else if (currentState == 45 || currentState == 50 || currentState == 55 || currentState == 61
+            } else if (currentState == 45 || currentState == 55 || currentState == 61
                     || currentState == 73 || currentState == 66 || currentState == 85 || currentState == 102) {
                 finalState = 4;
 
@@ -123,6 +123,8 @@ public class DFAChecker {
                 // if for
             } else if (currentState == 46 || currentState == 57) {
                 finalState = 17;
+            } else if (currentState == 50) {
+                finalState = 19;
             }
 
             return finalState;

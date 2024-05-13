@@ -72,7 +72,7 @@ public class CatScanner {
         return tokens;
     }
 
-    public void leerArchivo() {
+    public boolean leerArchivo() {
         int punteroInicial = 0;
         int punteroRecorrido = 0;
         char next = simbolos.get(punteroInicial);
@@ -86,7 +86,6 @@ public class CatScanner {
             while (i < simbolos.size() && !error) {
                 i++;
                 next = simbolos.get(punteroInicial);
-                // System.out.println("---- Caracter actual: " + next + "----");
                 simbolos.get(punteroInicial + 1);
                 lexema = new StringBuilder();
                 // currentCol += 1;
@@ -96,7 +95,8 @@ public class CatScanner {
 
                     while (punteroRecorrido < simbolos.size()) {
 
-                        currentCol += 1;
+                        currentCol++;
+
                         next = simbolos.get(punteroRecorrido);
                         if (Character.isWhitespace(next)) {
                             // System.out.println("CADENA ACEPTADA: " + lexema);
@@ -107,22 +107,23 @@ public class CatScanner {
                             classifyString(automata.checkAutomata(), lexema.toString());
                             System.out.println("puntero inicial ahora es :" + punteroInicial);
                             System.out.println("\n");
+                            System.out.println("currenCol: " + currentCol);
                             break;
                         }
                         if (!Character.isLetter(next) && !Character.isDigit(next)) {
                             // !Error
-                            System.out.println(next + " NO ES UN CARACTER");
                             error = true;
-
-                            System.out.println(error(currentLinea, currentCol));
-                            break;
+                            System.out.println(error(currentLinea, currentCol, next));
+                            return false;
                         }
 
                         lexema.append(next);
                         punteroRecorrido += 1;
+
                     }
                 } else if (Character.isDigit(next)) {
                     punteroRecorrido = punteroInicial;
+
                     while (punteroRecorrido < simbolos.size()) {
 
                         currentCol += 1;
@@ -142,9 +143,9 @@ public class CatScanner {
                         }
                         if (!Character.isDigit(next)) {
                             // !Error
-                            System.out.println(next + " NO ES UN DIGITO");
                             error = true;
-                            break;
+                            System.out.println(error(currentLinea, currentCol, next));
+                            return false;
                         }
 
                         lexema.append(next);
@@ -160,6 +161,7 @@ public class CatScanner {
                     if (next == '\r') {
                         System.out.println(next + "RETORNO DE CARRO");
                         punteroInicial += 1;
+
                     }
                     if (next == '\t') {
                         System.out.println(next + "TAB.\n");
@@ -169,8 +171,9 @@ public class CatScanner {
                     }
                 } else if (Character.isWhitespace(next)) {
                     System.out.println(next + "ESPACIO EN BLANCO");
+                    currentCol++;
                     punteroInicial++;
-                } else if (next == '=' || next == '+' || next == '-' || next == '!') {
+                } else if (next == '=' || next == '+' || next == '!') {
 
                     punteroRecorrido = punteroInicial;
                     while (punteroRecorrido < simbolos.size()) {
@@ -189,11 +192,11 @@ public class CatScanner {
 
                             break;
                         }
-                        if (next != '=' && next != '+' && next != '-' && next != '!') {
+                        if (next != '=' && next != '+' && next != '!') {
                             // !Error
-                            System.out.println(next + " NO ES VÁLIDO");
                             error = true;
-                            break;
+                            System.out.println(error(currentLinea, currentCol, next));
+                            return false;
                         }
                         lexema.append(next);
                         punteroRecorrido += 1;
@@ -202,9 +205,10 @@ public class CatScanner {
                     punteroRecorrido = punteroInicial;
 
                     while (punteroRecorrido < simbolos.size()) {
-                        currentCol += 1;
 
-                        next = simbolos.get(punteroRecorrido);
+                        currentCol += 1;
+                        lexema.append(next);
+                        next = simbolos.get(punteroRecorrido + 1);
                         if (Character.isWhitespace(next)) {
                             // System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
@@ -215,26 +219,19 @@ public class CatScanner {
                             System.out.println("puntero inicial ahora es :" + punteroInicial);
                             System.out.println("\n");
 
+                            punteroRecorrido += 1;
                             break;
                         }
-                        if ((next != '(' && next != ')' && next != '{' && next != '}')
-                                || (simbolos.get(punteroRecorrido + 1) == '(')
-                                || (simbolos.get(punteroRecorrido + 1) == ')')
-                                || (simbolos.get(punteroRecorrido + 1) == '[')
-                                || (simbolos.get(punteroRecorrido + 1) == ']')
-                                || (simbolos.get(punteroRecorrido + 1) == '{')
-                                || (simbolos.get(punteroRecorrido + 1) == '}')) {
-                            // !Error
-                            System.out.println(next + " NO ES VÁLIDO");
-                            error = true;
-                            break;
+                        // !Error
 
-                        }
+                        currentCol += 1;
+                        error = true;
+                        System.out.println(error(currentLinea, currentCol, next));
+                        return false;
 
-                        lexema.append(next);
-                        punteroRecorrido += 1;
                     }
                 } else if (next == '"') {
+                    currentCol++;
                     punteroRecorrido = punteroInicial;
                     next = simbolos.get(punteroRecorrido);
                     lexema.append(next);
@@ -245,8 +242,9 @@ public class CatScanner {
                         punteroRecorrido += 1;
                         next = simbolos.get(punteroRecorrido);
                         lexema.append(next);
-                        if (simbolos.get(punteroRecorrido + 1) == '"') {
+                        if (simbolos.get(punteroRecorrido + 1) == '"' && simbolos.get(punteroRecorrido + 2) == ' ') {
 
+                            currentCol += 2;
                             lexema.append(simbolos.get(punteroRecorrido + 1));
                             punteroInicial = punteroRecorrido + 3;
 
@@ -260,14 +258,21 @@ public class CatScanner {
                             System.out.println("\n");
 
                             break;
+                        } else if (simbolos.get(punteroRecorrido + 1) == '"'
+                                && simbolos.get(punteroRecorrido + 2) != ' ') {
+                            // !Error
+                            currentCol += 2;
+                            error = true;
+                            System.out.println(error(currentLinea, currentCol, simbolos.get(punteroRecorrido + 2)));
+                            return false;
                         }
                         if (next != ' ' && next != '"' && !Character.isLetter(next) && !Character.isDigit(next)
                                 && next != '.' && next != ',' && next != '?' && next != '¿' && next != '¡'
-                                && next != '!') {
+                                && next != '!' && next != '/' && next != '*' && next != '-') {
                             // !Error
-                            System.out.println(next + " NO ES VÁLIDO");
                             error = true;
-                            break;
+                            System.out.println(error(currentLinea, currentCol, next));
+                            return false;
                         }
 
                     }
@@ -292,9 +297,9 @@ public class CatScanner {
                         }
                         if (next != ';') {
                             // !Error
-                            System.out.println(next + " NO ES VÁLIDO");
                             error = true;
-                            break;
+                            System.out.println(error(currentLinea, currentCol, next));
+                            return false;
                         }
                         lexema.append(next);
                         punteroRecorrido += 1;
@@ -305,7 +310,8 @@ public class CatScanner {
                     while (punteroRecorrido < simbolos.size()) {
                         currentCol += 1;
 
-                        next = simbolos.get(punteroRecorrido);
+                        next = simbolos.get(punteroRecorrido + 1);
+
                         if (Character.isWhitespace(next)) {
                             // System.out.println("CADENA ACEPTADA: " + lexema);
                             punteroInicial = punteroRecorrido + 1;
@@ -316,30 +322,38 @@ public class CatScanner {
                             System.out.println("puntero inicial ahora es :" + punteroInicial);
                             System.out.println("\n");
 
+                            lexema.append(next);
+                            punteroRecorrido += 1;
                             break;
                         }
-                        if (next != ',') {
-                            // !Error
-                            System.out.println(next + " NO ES VÁLIDO");
-                            error = true;
-                            break;
-                        }
-                        lexema.append(next);
-                        punteroRecorrido += 1;
+                        // !Error
+                        currentCol += 1;
+                        error = true;
+                        System.out.println(error(currentLinea, currentCol, next));
+                        return false;
                     }
+                } else {
+
+                    // !Error
+                    currentCol++;
+                    System.out.println(error(currentLinea, currentCol, next));
+                    return false;
+
                 }
             }
         } catch (NullPointerException e) {
-            System.out.println(error(currentLinea, currentCol));
+            System.out.println(error(currentLinea, currentCol, next));
         } catch (Exception e) {
 
             System.out.println("Fin del archivo");
         }
+        return true;
 
     }
 
-    public String error(int linea, int col) {
-        return "Error en la línea " + linea + ", columna " + col;
+    public String error(int linea, int col, char character) {
+        return "Error in line " + linea + ", col " + col + "\n" + character
+                + " is not valid, delete this character or separate it with a whitespace";
     }
 
     public void classifyString(int input, String lexema) {
@@ -419,6 +433,10 @@ public class CatScanner {
                 System.out.println(lexema + " : Separador de parametros");
                 tokens.add(",");
                 break;
+            case 19:
+                System.out.println(lexema + " : Lectura de archivo");
+                tokens.add("read");
+                break;
             default:
                 System.out.println(lexema + " : ERROR CADENA NO VALIDA PARA CLASIFICAR");
                 tokens.add("NO RECONOCIDO: " + lexema);
@@ -434,10 +452,12 @@ class MainCat {
         File file = new File("codigo.txt");
         CatScanner cs = new CatScanner(file);
         cs.leerArchivoTest();
-        cs.leerArchivo();
-        System.out.println("\n---- Tabla de símbolos ----\n");
-        for (String token : cs.getTokens()) {
-            System.out.println(token);
+        if (cs.leerArchivo()) {
+
+            System.out.println("\n---- Tabla de símbolos ----\n");
+            for (String token : cs.getTokens()) {
+                System.out.println(token);
+            }
         }
     }
 }
