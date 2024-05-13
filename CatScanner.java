@@ -299,6 +299,34 @@ public class CatScanner {
                         lexema.append(next);
                         punteroRecorrido += 1;
                     }
+                } else if (next == ',') {
+
+                    punteroRecorrido = punteroInicial;
+                    while (punteroRecorrido < simbolos.size()) {
+                        currentCol += 1;
+
+                        next = simbolos.get(punteroRecorrido);
+                        if (Character.isWhitespace(next)) {
+                            // System.out.println("CADENA ACEPTADA: " + lexema);
+                            punteroInicial = punteroRecorrido + 1;
+
+                            // Lógica del autómata
+                            // Automata automata = new Automata(lexema.toString());
+                            classifyString(18, ",");
+                            System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            System.out.println("\n");
+
+                            break;
+                        }
+                        if (next != ',') {
+                            // !Error
+                            System.out.println(next + " NO ES VÁLIDO");
+                            error = true;
+                            break;
+                        }
+                        lexema.append(next);
+                        punteroRecorrido += 1;
+                    }
                 }
             }
         } catch (NullPointerException e) {
@@ -317,8 +345,8 @@ public class CatScanner {
     public void classifyString(int input, String lexema) {
         switch (input) {
             case 1:
-                System.out.println(lexema + " : Es un Operador Aritmético");
-                tokens.add("op aritmetico");
+                System.out.println(lexema + " : Es una concatenacion");
+                tokens.add("+");
                 break;
 
             case 2:
@@ -386,6 +414,10 @@ public class CatScanner {
             case 17:
                 System.out.println(lexema + " : Estructuras de control de flujo");
                 tokens.add("ctrl flujo");
+                break;
+            case 18:
+                System.out.println(lexema + " : Separador de parametros");
+                tokens.add(",");
                 break;
             default:
                 System.out.println(lexema + " : ERROR CADENA NO VALIDA PARA CLASIFICAR");

@@ -3,13 +3,13 @@ string variable2 = "1233" ;
 boolean variable3 = true ;
 print ( xr ) ;
 if ( variable == 1233 ) {
-    file archivo1 = read ( "archivo.txt" )
+    file archivo1 = read ( "archivo.txt" ) ;
+    replace ( "Hola" , archivo1 ) ;
 }
 for ( 9 ) {
 print ( "homundo" ) ;
 print ( "example cadena xd" ) ;
 search ;
-in ;
 generateFile ;
 or ;
 and ;

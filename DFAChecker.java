@@ -57,9 +57,8 @@ public class DFAChecker {
 
         if (finalStates.contains(currentState)) {
             int finalState = 0;
-            // Operadores aritméticos (+ , -, *,
-            if (currentState == 1 || currentState == 3 || currentState == 4
-                    || currentState == 5 || currentState == 6) {
+            // Concatenacion +
+            if (currentState == 1) {
                 finalState = 1;
 
             }
