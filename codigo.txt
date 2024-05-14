@@ -6,16 +6,9 @@ string variable2 = "1233" + "3" + "w" + "xd" ;
 print ( xr == 3  and "hola" == "hola" or "hola" == "hola" ) ;
 if ( variable == 1233 ) {
     file archivo1 = read ( "archivo.txt" ) ;
-replace ( "Hola" , archivo1 ) ;
+    replace ( "Hola" , archivo1  ) ;
 }
 for ( 9 ) {
-print ( "homundo" ) ;
-print ( "example cadena xd" ) ;
-search ;
-generateFile ;
-or ;
-and ;
-== ;
-!= ;
-! ;
+    print ( "homundo" ) ;
+    print ( "example cadena xd" ) ;
 } 

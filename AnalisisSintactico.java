@@ -31,18 +31,18 @@ public class AnalisisSintactico {
 
     public void Codigo() {
         try {
-            currentLine++;
-            Sentencia();
-            Sentencia();
-            Sentencia();
-            Sentencia();
-            Sentencia();
-            Sentencia();
+            while (true) {
+                currentLine++;
+                Sentencia();
+                if (currentToken == "}") {
+                    break;
+                }
+            }
             // if (currentToken != " ") {
             // Codigo();
             // }
         } catch (Exception e) {
-
+            // System.out.println("error");
         }
 
     }
@@ -80,6 +80,36 @@ public class AnalisisSintactico {
                         nextToken();
                     } else {
                         error(";");
+                    }
+                } else {
+                    error("Too much parameters or )");
+                }
+
+            } else {
+                error("(");
+            }
+        } else if (currentToken == "ctrl flujo") {
+            nextToken();
+            if (currentToken == "(") {
+                nextToken();
+                Parametros();
+                if (currentToken == ")") {
+                    nextToken();
+                    if (currentToken == "{") {
+                        System.out.println(currentToken);
+                        nextToken();
+
+                        Codigo();
+                        if (currentToken == "}") {
+                            System.out.println(currentToken);
+                            System.out.println("sentencia aceptada");
+                            nextToken();
+                            Codigo();
+                        } else {
+                            error("}");
+                        }
+                    } else {
+                        error("{");
                     }
                 } else {
                     error(")");
@@ -150,6 +180,7 @@ public class AnalisisSintactico {
         if (currentToken == ",") {
             nextToken();
             Valor();
+            return;
         }
         prevToken();
         Validacion();
