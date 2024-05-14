@@ -24,7 +24,7 @@ public class CatScanner {
 
     // * Lee el archivo y coloca cada caracter en un espacio del arreglo
     // simbolo*/
-    public void leerArchivoSimbolo() {
+    public void leerSimbolos() {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             int charCode;
             while ((charCode = br.read()) != -1) {
@@ -45,7 +45,7 @@ public class CatScanner {
     }
 
     // * Valida los caracteres y asigna los tokens a la tabla de simbolos
-    public boolean leerArchivoToken() {
+    public boolean validarTokens() {
         int punteroInicial = 0;
         int punteroRecorrido = 0;
         char next = simbolos.get(punteroInicial);
@@ -78,9 +78,9 @@ public class CatScanner {
                             // Lógica del autómata
                             Automata automata = new Automata(lexema.toString());
                             classifyString(automata.checkAutomata(), lexema.toString());
-                            System.out.println("puntero inicial ahora es :" + punteroInicial);
-                            System.out.println("\n");
-                            System.out.println("currenCol: " + currentCol);
+                            // System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            // System.out.println("\n");
+                            // System.out.println("currenCol: " + currentCol);
                             break;
                         }
                         if (!Character.isLetter(next) && !Character.isDigit(next)) {
@@ -108,9 +108,9 @@ public class CatScanner {
                             // Lógica del autómata
                             Automata automata = new Automata(lexema.toString());
                             classifyString(automata.checkAutomata(), lexema.toString());
-                            System.out.println("puntero inicial ahora es :" + punteroInicial);
-                            System.out.println("\n");
-                            System.out.println();
+                            // System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            // System.out.println("\n");
+                            // System.out.println();
 
                             break;
                         }
@@ -126,24 +126,24 @@ public class CatScanner {
                     }
                 } else if (Character.isISOControl(next)) {
                     if (next == '\n') {
-                        System.out.println(next + "SALTO DE LÍNEA.\n");
+                        // System.out.println(next + "SALTO DE LÍNEA.\n");
                         punteroInicial += 1;
                         currentLinea += 1;
                         currentCol = 0;
                     }
                     if (next == '\r') {
-                        System.out.println(next + "RETORNO DE CARRO");
+                        // System.out.println(next + "RETORNO DE CARRO");
                         punteroInicial += 1;
 
                     }
                     if (next == '\t') {
-                        System.out.println(next + "TAB.\n");
+                        // System.out.println(next + "TAB.\n");
                         punteroInicial += 3;
                         // currentLinea += 1;
                         // currentCol = 0;
                     }
                 } else if (Character.isWhitespace(next)) {
-                    System.out.println(next + "ESPACIO EN BLANCO");
+                    // System.out.println(next + "ESPACIO EN BLANCO");
                     currentCol++;
                     punteroInicial++;
                 } else if (next == '=' || next == '+' || next == '!') {
@@ -160,8 +160,8 @@ public class CatScanner {
                             // Lógica del autómata
                             Automata automata = new Automata(lexema.toString());
                             classifyString(automata.checkAutomata(), lexema.toString());
-                            System.out.println("puntero inicial ahora es :" + punteroInicial);
-                            System.out.println("\n");
+                            // System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            // System.out.println("\n");
 
                             break;
                         }
@@ -189,8 +189,8 @@ public class CatScanner {
                             // Lógica del autómata
                             Automata automata = new Automata(lexema.toString());
                             classifyString(automata.checkAutomata(), lexema.toString());
-                            System.out.println("puntero inicial ahora es :" + punteroInicial);
-                            System.out.println("\n");
+                            // System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            // System.out.println("\n");
 
                             punteroRecorrido += 1;
                             break;
@@ -227,8 +227,8 @@ public class CatScanner {
 
                             // System.out.println("CADENA ACEPTADA: " + lexema);
                             classifyString(9, lexema.toString());
-                            System.out.println("puntero inicial ahora es :" + punteroInicial);
-                            System.out.println("\n");
+                            // System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            // System.out.println("\n");
 
                             break;
                         } else if (simbolos.get(punteroRecorrido + 1) == '"'
@@ -263,8 +263,8 @@ public class CatScanner {
                             // Lógica del autómata
                             // Automata automata = new Automata(lexema.toString());
                             classifyString(15, ";");
-                            System.out.println("puntero inicial ahora es :" + punteroInicial);
-                            System.out.println("\n");
+                            // System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            // System.out.println("\n");
 
                             break;
                         }
@@ -292,8 +292,8 @@ public class CatScanner {
                             // Lógica del autómata
                             // Automata automata = new Automata(lexema.toString());
                             classifyString(18, ",");
-                            System.out.println("puntero inicial ahora es :" + punteroInicial);
-                            System.out.println("\n");
+                            // System.out.println("puntero inicial ahora es :" + punteroInicial);
+                            // System.out.println("\n");
 
                             lexema.append(next);
                             punteroRecorrido += 1;
@@ -318,7 +318,7 @@ public class CatScanner {
             System.out.println(error(currentLinea, currentCol, next));
         } catch (Exception e) {
 
-            System.out.println("Fin del archivo");
+            // System.out.println("Fin del archivo");
         }
         return true;
 
@@ -332,86 +332,86 @@ public class CatScanner {
     public void classifyString(int input, String lexema) {
         switch (input) {
             case 1:
-                System.out.println(lexema + " : Es una concatenacion");
+                // System.out.println(lexema + " : Es una concatenacion");
                 tokens.add(new Token(lexema, "+"));
                 break;
 
             case 2:
-                System.out.println(lexema + " : Es un Operador Lógico");
+                // System.out.println(lexema + " : Es un Operador Lógico");
                 tokens.add(new Token(lexema, "op logico"));
                 break;
 
             case 3:
-                System.out.println(lexema + " : Es un Tipo de Dato");
+                // System.out.println(lexema + " : Es un Tipo de Dato");
                 tokens.add(new Token(lexema, "tipo"));
                 break;
 
             case 4:
-                System.out.println(lexema + " : Es una Palabra reservada");
+                // System.out.println(lexema + " : Es una Palabra reservada");
                 tokens.add(new Token(lexema, "reservada"));
                 break;
 
             case 6:
-                System.out.println(lexema + " : Es una Variable");
+                // System.out.println(lexema + " : Es una Variable");
                 tokens.add(new Token(lexema, "id"));
                 break;
 
             case 7:
-                System.out.println(lexema + " : Son Números");
+                // System.out.println(lexema + " : Son Números");
                 tokens.add(new Token(lexema, "numero"));
                 break;
 
             case 8:
-                System.out.println(lexema + " : Es un valor de tipo Booleano");
+                // System.out.println(lexema + " : Es un valor de tipo Booleano");
                 tokens.add(new Token(lexema, "booleano"));
                 break;
 
             case 9:
-                System.out.println(lexema + " : Es una cadena de texto");
+                // System.out.println(lexema + " : Es una cadena de texto");
                 tokens.add(new Token(lexema, "cadena"));
                 break;
             case 10:
-                System.out.println(lexema + " : Es una igualación");
+                // System.out.println(lexema + " : Es una igualación");
                 tokens.add(new Token(lexema, "="));
                 break;
             case 11:
-                System.out.println(lexema + " : Es un Signo de Agrupación (");
+                // System.out.println(lexema + " : Es un Signo de Agrupación (");
                 tokens.add(new Token(lexema, "("));
                 break;
             case 12:
-                System.out.println(lexema + " : Es un Signo de Agrupación )");
+                // System.out.println(lexema + " : Es un Signo de Agrupación )");
                 tokens.add(new Token(lexema, ")"));
                 break;
             case 13:
-                System.out.println(lexema + " : Es un Signo de Agrupación {");
+                // System.out.println(lexema + " : Es un Signo de Agrupación {");
                 tokens.add(new Token(lexema, "{"));
                 break;
             case 14:
-                System.out.println(lexema + " : Es un Signo de Agrupación }");
+                // System.out.println(lexema + " : Es un Signo de Agrupación }");
                 tokens.add(new Token(lexema, "}"));
                 break;
             case 15:
-                System.out.println(lexema + " : Fin de sentencia");
+                // System.out.println(lexema + " : Fin de sentencia");
                 tokens.add(new Token(lexema, ";"));
                 break;
             case 16:
-                System.out.println(lexema + " : Operador de comparación");
+                // System.out.println(lexema + " : Operador de comparación");
                 tokens.add(new Token(lexema, "op comp"));
                 break;
             case 17:
-                System.out.println(lexema + " : Estructuras de control de flujo");
+                // System.out.println(lexema + " : Estructuras de control de flujo");
                 tokens.add(new Token(lexema, "ctrl flujo"));
                 break;
             case 18:
-                System.out.println(lexema + " : Separador de parametros");
+                // System.out.println(lexema + " : Separador de parametros");
                 tokens.add(new Token(lexema, ","));
                 break;
             case 19:
-                System.out.println(lexema + " : Lectura de archivo");
+                // System.out.println(lexema + " : Lectura de archivo");
                 tokens.add(new Token(lexema, "read"));
                 break;
             default:
-                System.out.println(lexema + " : ERROR CADENA NO VALIDA PARA CLASIFICAR");
+                // System.out.println(lexema + " : ERROR CADENA NO VALIDA PARA CLASIFICAR");
                 tokens.add(new Token(lexema, "NO RECONOCIDO: " + lexema));
 
                 break;
@@ -442,14 +442,17 @@ class MainCat {
     public static void main(String[] args) {
         File file = new File("codigo.txt");
         CatScanner cs = new CatScanner(file);
-        cs.leerArchivoSimbolo();
-        // AnalisisSintactico as = new AnalisisSintactico(cs.getTokens());
-        if (cs.leerArchivoToken()) {
+        cs.leerSimbolos();
+        cs.validarTokens();
+        AnalisisSintactico as = new AnalisisSintactico(cs.getTokens());
+        // if (cs.validarTokens()) {
 
-            System.out.println("\n---- Tabla de símbolos ----\n");
-            for (Token token : cs.getTokens()) {
-                System.out.println(token.getTipo());
-            }
-        }
+        // System.out.println("\n---- Tabla de símbolos ----\n");
+        // for (Token token : as.getTokens()) {
+        // System.out.println(token.getTipo());
+        // }
+        // }
+
+        as.Codigo();
     }
 }

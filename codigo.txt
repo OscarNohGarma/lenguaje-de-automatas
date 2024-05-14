@@ -1,6 +1,8 @@
-boolean variable1 = 1233 + 3 ;
-string variable2 = "1233" ;
+int variable1 = 1233 ;
+int var1v2 = variable1 ;
 boolean variable3 = true ;
+file archivoEx = read (  "archivo.txt" ) ;
+string variable2 = "1233" + "3" + "w" + "xd" ;
 print ( xr ) ;
 if ( variable == 1233 ) {
     file archivo1 = read ( "archivo.txt" ) ;
