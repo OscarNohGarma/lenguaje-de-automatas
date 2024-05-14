@@ -24,9 +24,15 @@ public class AnalisisSintactico {
         currentToken = tokens.get(contador).getTipo();
     }
 
+    public void prevToken() {
+        contador--;
+        currentToken = tokens.get(contador).getTipo();
+    }
+
     public void Codigo() {
         try {
             currentLine++;
+            Sentencia();
             Sentencia();
             Sentencia();
             Sentencia();
@@ -42,13 +48,13 @@ public class AnalisisSintactico {
     }
 
     public void Sentencia() {
+        // System.out.println(currentToken);
         if (currentToken == "tipo") {
             nextToken();
             if (currentToken == "id") {
                 nextToken();
                 if (currentToken == "=") {
                     nextToken();
-                    System.out.println(currentToken);
                     Valor();
                     if (currentToken == ";") {
                         System.out.println("sentencia aceptada");
@@ -62,10 +68,31 @@ public class AnalisisSintactico {
             } else {
                 error("Identifier");
             }
+        } else if (currentToken == "reservada") {
+            nextToken();
+            if (currentToken == "(") {
+                nextToken();
+                Parametros();
+                if (currentToken == ")") {
+                    nextToken();
+                    if (currentToken == ";") {
+                        System.out.println("sentencia aceptada");
+                        nextToken();
+                    } else {
+                        error(";");
+                    }
+                } else {
+                    error(")");
+                }
+
+            } else {
+                error("(");
+            }
         }
     }
 
     public void Valor() {
+
         if (currentToken == "numero") {
             nextToken();
             return;
@@ -93,7 +120,7 @@ public class AnalisisSintactico {
             } else {
                 error("(");
             }
-        } else {
+        } else if (currentToken == "cadena") {
             Mensaje();
             return;
         }
@@ -112,6 +139,46 @@ public class AnalisisSintactico {
             } else {
                 error("String");
             }
+        }
+    }
+
+    public void Parametros() {
+        Valor();
+        if (currentToken == ")") {
+            return;
+        }
+        if (currentToken == ",") {
+            nextToken();
+            Valor();
+        }
+        prevToken();
+        Validacion();
+
+    }
+
+    public void Validacion() {
+        Condicion();
+
+        if (currentToken == ")") {
+            return;
+
+        } else if (currentToken == "op logico") {
+            nextToken();
+            Validacion();
+        } else {
+            error("Logical operator");
+        }
+        // System.out.println(currentToken);
+
+    }
+
+    public void Condicion() {
+        Valor();
+        if (currentToken == "op comp") {
+            nextToken();
+            Valor();
+        } else {
+            error("Comparation operator");
         }
     }
 
