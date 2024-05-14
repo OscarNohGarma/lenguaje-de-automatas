@@ -1,6 +1,6 @@
 boolean variable1 = 1233 + 3 ;
 string variable2 = "1233" ;
-boolean variab/le3 = true ;
+boolean variable3 = true ;
 print ( xr ) ;
 if ( variable == 1233 ) {
     file archivo1 = read ( "archivo.txt" ) ;

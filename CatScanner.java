@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class CatScanner {
 
     private File file;
-    private ArrayList<String> tokens;
+    private ArrayList<Token> tokens;
     private ArrayList<Character> simbolos;
     private String codigo;
     private int currentLinea;
@@ -22,37 +22,9 @@ public class CatScanner {
         currentLinea = 1;
     }
 
-    public void separar() {
-        Pattern pattern = Pattern.compile("\\s+|\\{|\\}|\\[|\\]|\\(|\\)|;|:|,|\"|_|\\+|-|\\*|/|\\\\|>|<|=|`|'");
-        Matcher matcher = pattern.matcher(codigo);
-
-        int inicio = 0;
-        while (matcher.find()) {
-            int fin = matcher.start();
-            if (fin > inicio) {
-                String token = codigo.substring(inicio, fin);
-                tokens.add(token);
-            }
-
-            // Agregar el símbolo encontrado como token
-            String symbol = matcher.group();
-            if (!symbol.trim().isEmpty()) { // Ignorar espacios en blanco
-                tokens.add(symbol);
-            }
-
-            inicio = matcher.end();
-        }
-
-        // Agregar el último token si hay caracteres restantes
-        if (inicio < codigo.length()) {
-            String token = codigo.substring(inicio);
-            tokens.add(token);
-        }
-    }
-
-    // * TEST: Lee el archivo y coloca cada caracter en un espacio del arreglo
+    // * Lee el archivo y coloca cada caracter en un espacio del arreglo
     // simbolo*/
-    public void leerArchivoTest() {
+    public void leerArchivoSimbolo() {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             int charCode;
             while ((charCode = br.read()) != -1) {
@@ -68,11 +40,12 @@ public class CatScanner {
         return simbolos;
     }
 
-    public ArrayList<String> getTokens() {
+    public ArrayList<Token> getTokens() {
         return tokens;
     }
 
-    public boolean leerArchivo() {
+    // * Valida los caracteres y asigna los tokens a la tabla de simbolos
+    public boolean leerArchivoToken() {
         int punteroInicial = 0;
         int punteroRecorrido = 0;
         char next = simbolos.get(punteroInicial);
@@ -360,86 +333,86 @@ public class CatScanner {
         switch (input) {
             case 1:
                 System.out.println(lexema + " : Es una concatenacion");
-                tokens.add("+");
+                tokens.add(new Token(lexema, "+"));
                 break;
 
             case 2:
                 System.out.println(lexema + " : Es un Operador Lógico");
-                tokens.add("op logico");
+                tokens.add(new Token(lexema, "op logico"));
                 break;
 
             case 3:
                 System.out.println(lexema + " : Es un Tipo de Dato");
-                tokens.add("tipo");
+                tokens.add(new Token(lexema, "tipo"));
                 break;
 
             case 4:
                 System.out.println(lexema + " : Es una Palabra reservada");
-                tokens.add("reservada");
+                tokens.add(new Token(lexema, "reservada"));
                 break;
 
             case 6:
                 System.out.println(lexema + " : Es una Variable");
-                tokens.add("id");
+                tokens.add(new Token(lexema, "id"));
                 break;
 
             case 7:
                 System.out.println(lexema + " : Son Números");
-                tokens.add("numero");
+                tokens.add(new Token(lexema, "numero"));
                 break;
 
             case 8:
                 System.out.println(lexema + " : Es un valor de tipo Booleano");
-                tokens.add("booleano");
+                tokens.add(new Token(lexema, "booleano"));
                 break;
 
             case 9:
                 System.out.println(lexema + " : Es una cadena de texto");
-                tokens.add("cadena");
+                tokens.add(new Token(lexema, "cadena"));
                 break;
             case 10:
                 System.out.println(lexema + " : Es una igualación");
-                tokens.add("=");
+                tokens.add(new Token(lexema, "="));
                 break;
             case 11:
                 System.out.println(lexema + " : Es un Signo de Agrupación (");
-                tokens.add("(");
+                tokens.add(new Token(lexema, "("));
                 break;
             case 12:
                 System.out.println(lexema + " : Es un Signo de Agrupación )");
-                tokens.add(")");
+                tokens.add(new Token(lexema, ")"));
                 break;
             case 13:
                 System.out.println(lexema + " : Es un Signo de Agrupación {");
-                tokens.add("{");
+                tokens.add(new Token(lexema, "{"));
                 break;
             case 14:
                 System.out.println(lexema + " : Es un Signo de Agrupación }");
-                tokens.add("}");
+                tokens.add(new Token(lexema, "}"));
                 break;
             case 15:
                 System.out.println(lexema + " : Fin de sentencia");
-                tokens.add(";");
+                tokens.add(new Token(lexema, ";"));
                 break;
             case 16:
                 System.out.println(lexema + " : Operador de comparación");
-                tokens.add("op comp");
+                tokens.add(new Token(lexema, "op comp"));
                 break;
             case 17:
                 System.out.println(lexema + " : Estructuras de control de flujo");
-                tokens.add("ctrl flujo");
+                tokens.add(new Token(lexema, "ctrl flujo"));
                 break;
             case 18:
                 System.out.println(lexema + " : Separador de parametros");
-                tokens.add(",");
+                tokens.add(new Token(lexema, ","));
                 break;
             case 19:
                 System.out.println(lexema + " : Lectura de archivo");
-                tokens.add("read");
+                tokens.add(new Token(lexema, "read"));
                 break;
             default:
                 System.out.println(lexema + " : ERROR CADENA NO VALIDA PARA CLASIFICAR");
-                tokens.add("NO RECONOCIDO: " + lexema);
+                tokens.add(new Token(lexema, "NO RECONOCIDO: " + lexema));
 
                 break;
         }
@@ -447,16 +420,35 @@ public class CatScanner {
 
 }
 
+class Token {
+    private String valor;
+    private String tipo;
+
+    public Token(String valor, String tipo) {
+        this.valor = valor;
+        this.tipo = tipo;
+    }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+}
+
 class MainCat {
     public static void main(String[] args) {
         File file = new File("codigo.txt");
         CatScanner cs = new CatScanner(file);
-        cs.leerArchivoTest();
-        if (cs.leerArchivo()) {
+        cs.leerArchivoSimbolo();
+        // AnalisisSintactico as = new AnalisisSintactico(cs.getTokens());
+        if (cs.leerArchivoToken()) {
 
             System.out.println("\n---- Tabla de símbolos ----\n");
-            for (String token : cs.getTokens()) {
-                System.out.println(token);
+            for (Token token : cs.getTokens()) {
+                System.out.println(token.getTipo());
             }
         }
     }
