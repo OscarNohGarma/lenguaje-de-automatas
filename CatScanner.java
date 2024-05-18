@@ -129,7 +129,6 @@ public class CatScanner {
                     }
                 } else if (Character.isISOControl(next)) {
                     if (next == '\n') {
-                        // System.out.println(next + "SALTO DE LÍNEA.\n");
                         punteroInicial += 1;
                         currentLinea += 1;
                         currentCol = 0;
@@ -243,7 +242,7 @@ public class CatScanner {
                             return false;
                         }
                         if (next != ' ' && next != '"' && !Character.isLetter(next) && !Character.isDigit(next)
-                                && next != '.' && next != ',' && next != '?' && next != '¿' && next != '¡'
+                                && next != '.' && next != ',' && next != '?' && next != '\u00BF'
                                 && next != '!' && next != '/' && next != '*' && next != '-') {
                             // !Error
                             error = true;
@@ -454,7 +453,20 @@ class Token {
 
 class MainCat {
     public static void main(String[] args) {
-        File file = new File("codigo.txt");
+
+        if (args.length == 0) {
+            System.out.println("No input file specified.");
+            return;
+        }
+
+
+        // File file = new File("codigo.cat");
+        File file = new File(args[0]);
+        if (!file.exists()) {
+            System.out.println("File not found: " + args[0]);
+            return;
+        }
+
         CatScanner cs = new CatScanner(file);
         cs.leerSimbolos();
         boolean val = cs.validarTokens();
