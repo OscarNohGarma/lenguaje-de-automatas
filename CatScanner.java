@@ -327,8 +327,8 @@ public class CatScanner {
     }
 
     public String error(int linea, int col, char character) {
-        return "Error in line " + linea + ", col " + col + "\n" + character
-                + " is not valid, delete this character or separate it with a whitespace";
+        return "An error occurred during compilation.\nError in line " + linea + ", col " + col + ".\n" + character
+                + " is not valid, delete this character or separate it with a whitespace.";
     }
 
     public void classifyString(int input, String lexema) {
@@ -393,8 +393,9 @@ public class CatScanner {
                 // System.out.println(lexema + " : Es un Signo de Agrupación }");
                 tokens.add(new Token(lexema, "}"));
                 if (keys.size() == 0) {
+                    System.out.println("An error occurred during compilation.");
                     System.out.println("Error in line " + currentLinea + ",  col " + currentCol
-                            + "\n } is not valid, delete this token ");
+                            + "\n } is not valid (close without an open key), delete this token ");
                     System.exit(0);
                 }
                 keys.pop();
@@ -422,7 +423,7 @@ public class CatScanner {
             default:
                 // System.out.println(lexema + " : ERROR CADENA NO VALIDA PARA CLASIFICAR");
                 // tokens.add(new Token(lexema, "NO RECONOCIDO: " + lexema));
-
+                System.out.println("An error occurred during compilation.");
                 System.out.println("Error in line " + currentLinea + ",  col " + (currentCol - lexema.length())
                         + "\nInvalid id name");
                 System.exit(0);
@@ -472,14 +473,17 @@ class MainCat {
         boolean val = cs.validarTokens();
         AnalisisSintactico as = new AnalisisSintactico(cs.getTokens());
 
-        as.Codigo();
-
         if (val) {
+            as.Codigo();
+            System.out.println("Successfully compiled.\n");
 
-            System.out.println("\n---- Tabla de símbolos ----\n");
+            System.out.println("+-------------Tabla de símbolos-------------+");
+            System.out.printf("| %-20s| %-20s|%n", "Valor", "Tipo");
+            System.out.println("+---------------------+---------------------+");
             for (Token token : as.getTokens()) {
-                System.out.println(token.getTipo());
+                System.out.printf("| %-20s| %-20s|%n", token.getValor(), token.getTipo());
             }
+            System.out.println("+---------------------+---------------------+");
         }
     }
 }
