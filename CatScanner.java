@@ -460,8 +460,7 @@ class MainCat {
             return;
         }
 
-
-        // File file = new File("codigo.cat");
+        // File file = new File("codigo.txt");
         File file = new File(args[0]);
         if (!file.exists()) {
             System.out.println("File not found: " + args[0]);
@@ -475,7 +474,7 @@ class MainCat {
 
         if (val) {
             as.Codigo();
-            System.out.println("Successfully compiled.\n");
+            System.out.println("\nSuccessfully compiled.\n");
 
             System.out.println("+-------------Tabla de símbolos-------------+");
             System.out.printf("| %-20s| %-20s|%n", "Valor", "Tipo");
