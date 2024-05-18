@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,11 +13,13 @@ public class CatScanner {
     private ArrayList<Token> tokens;
     private ArrayList<Character> simbolos;
     private String codigo;
+    private Stack<String> keys;
     private int currentLinea;
     private int currentCol;
 
     public CatScanner(File file) {
         this.file = file;
+        keys = new Stack<>();
         tokens = new ArrayList<>();
         simbolos = new ArrayList<>();
         currentLinea = 1;
@@ -385,10 +388,17 @@ public class CatScanner {
             case 13:
                 // System.out.println(lexema + " : Es un Signo de Agrupación {");
                 tokens.add(new Token(lexema, "{"));
+                keys.push(lexema);
                 break;
             case 14:
                 // System.out.println(lexema + " : Es un Signo de Agrupación }");
                 tokens.add(new Token(lexema, "}"));
+                if (keys.size() == 0) {
+                    System.out.println("Error in line " + currentLinea + ",  col " + currentCol
+                            + "\n } is not valid, delete this token ");
+                    System.exit(0);
+                }
+                keys.pop();
                 break;
             case 15:
                 // System.out.println(lexema + " : Fin de sentencia");
@@ -412,7 +422,11 @@ public class CatScanner {
                 break;
             default:
                 // System.out.println(lexema + " : ERROR CADENA NO VALIDA PARA CLASIFICAR");
-                tokens.add(new Token(lexema, "NO RECONOCIDO: " + lexema));
+                // tokens.add(new Token(lexema, "NO RECONOCIDO: " + lexema));
+
+                System.out.println("Error in line " + currentLinea + ",  col " + (currentCol - lexema.length())
+                        + "\nInvalid id name");
+                System.exit(0);
 
                 break;
         }
@@ -443,16 +457,17 @@ class MainCat {
         File file = new File("codigo.txt");
         CatScanner cs = new CatScanner(file);
         cs.leerSimbolos();
-        cs.validarTokens();
+        boolean val = cs.validarTokens();
         AnalisisSintactico as = new AnalisisSintactico(cs.getTokens());
-        // if (cs.validarTokens()) {
-
-        // System.out.println("\n---- Tabla de símbolos ----\n");
-        // for (Token token : as.getTokens()) {
-        // System.out.println(token.getTipo());
-        // }
-        // }
 
         as.Codigo();
+
+        if (val) {
+
+            System.out.println("\n---- Tabla de símbolos ----\n");
+            for (Token token : as.getTokens()) {
+                System.out.println(token.getTipo());
+            }
+        }
     }
 }

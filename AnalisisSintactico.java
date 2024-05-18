@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class AnalisisSintactico {
 
@@ -6,11 +7,13 @@ public class AnalisisSintactico {
     private String currentToken;
     private int contador;
     private int currentLine;
+    private Stack<String> keys;
 
     public AnalisisSintactico(ArrayList<Token> tokens) {
         this.tokens = tokens;
         // currentToken = tokens.get(contador).getTipo();
         currentToken = tokens.get(contador).getTipo();
+        keys = new Stack<>();
         contador = 0;
         currentLine = 0;
     }
@@ -20,8 +23,15 @@ public class AnalisisSintactico {
     }
 
     public void nextToken() {
-        contador++;
-        currentToken = tokens.get(contador).getTipo();
+        try {
+            contador++;
+            currentToken = tokens.get(contador).getTipo();
+
+        } catch (Exception e) {
+            if (currentToken == "}")
+                ;
+            currentToken = "FIN";
+        }
     }
 
     public void prevToken() {
@@ -34,7 +44,7 @@ public class AnalisisSintactico {
             while (true) {
                 currentLine++;
                 Sentencia();
-                if (currentToken == "}") {
+                if (currentToken == "}" || currentToken == "FIN") {
                     break;
                 }
             }
@@ -42,7 +52,7 @@ public class AnalisisSintactico {
             // Codigo();
             // }
         } catch (Exception e) {
-            // System.out.println("error");
+
         }
 
     }
@@ -68,6 +78,7 @@ public class AnalisisSintactico {
             } else {
                 error("Identifier");
             }
+
         } else if (currentToken == "reservada") {
             nextToken();
             if (currentToken == "(") {
@@ -97,16 +108,24 @@ public class AnalisisSintactico {
                     nextToken();
                     if (currentToken == "{") {
                         System.out.println(currentToken);
+                        // System.out.println("PUSH");
+                        keys.push(currentToken);
                         nextToken();
 
                         Codigo();
                         if (currentToken == "}") {
                             System.out.println(currentToken);
+                            keys.pop();
+                            // System.out.println("POP");
                             System.out.println("sentencia aceptada");
                             nextToken();
+
                             Codigo();
+                            // prevToken();
+                            // System.out.println("CUR" + currentToken);
                         } else {
-                            error("}");
+                            currentLine++;
+                            error("Uncomplete flow control structure, } is expected");
                         }
                     } else {
                         error("{");
@@ -117,6 +136,10 @@ public class AnalisisSintactico {
 
             } else {
                 error("(");
+            }
+        } else {
+            if (currentToken != "}" && currentToken != "FIN") {
+                error("Valid datatype, reserved word or flow control");
             }
         }
     }
@@ -214,7 +237,7 @@ public class AnalisisSintactico {
     }
 
     public void error(String tipo) {
-        System.out.println("Error in line " + currentLine);
+        System.out.println("Error in line " + (currentLine + 1));
         System.out.println(tipo + " is expected");
         System.exit(0);
     }
