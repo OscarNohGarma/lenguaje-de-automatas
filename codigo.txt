@@ -13,11 +13,12 @@ if ( variable == 1233 ) {
             print ( "homundo" ) ;
             print ( "example cadena xd" ) ;
             for ( 9 ) {
-            print ( "homundo" ) ;
+                print ( "homundo" ) ;
+                print ( "example cadena xd" ) ;
+            } 
             print ( "example cadena xd" ) ;
-        } 
-        print ( "example cadena xd" ) ;
         }
     }
 }
-int variable1 = true ; int variable = 2 ;
+int x = true ; 
+int num = 2 ;

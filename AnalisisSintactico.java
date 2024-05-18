@@ -5,6 +5,7 @@ public class AnalisisSintactico {
 
     private ArrayList<Token> tokens;
     private String currentToken;
+    private String currentTokVal;
     private int contador;
     private int currentLine;
     private Stack<String> keys;
@@ -13,9 +14,10 @@ public class AnalisisSintactico {
         this.tokens = tokens;
         // currentToken = tokens.get(contador).getTipo();
         currentToken = tokens.get(contador).getTipo();
+        currentTokVal = tokens.get(contador).getValor();
         keys = new Stack<>();
         contador = 0;
-        currentLine = 0;
+        currentLine = 1;
     }
 
     public ArrayList<Token> getTokens() {
@@ -26,7 +28,10 @@ public class AnalisisSintactico {
         try {
             contador++;
             currentToken = tokens.get(contador).getTipo();
-
+            currentTokVal = tokens.get(contador).getValor();
+            if (currentToken == "}" || currentToken == ";" || currentToken == "{") {
+                currentLine++;
+            }
         } catch (Exception e) {
             if (currentToken == "}")
                 ;
@@ -37,12 +42,14 @@ public class AnalisisSintactico {
     public void prevToken() {
         contador--;
         currentToken = tokens.get(contador).getTipo();
+        currentTokVal = tokens.get(contador).getValor();
     }
 
     public void Codigo() {
         try {
             while (true) {
-                currentLine++;
+                // currentLine++;
+
                 Sentencia();
                 if (currentToken == "}" || currentToken == "FIN") {
                     break;
@@ -67,7 +74,7 @@ public class AnalisisSintactico {
                     nextToken();
                     Valor();
                     if (currentToken == ";") {
-                        System.out.println("sentencia aceptada");
+                        // System.out.println("sentencia aceptada");
                         nextToken();
                     } else {
                         error(";");
@@ -87,7 +94,7 @@ public class AnalisisSintactico {
                 if (currentToken == ")") {
                     nextToken();
                     if (currentToken == ";") {
-                        System.out.println("sentencia aceptada");
+                        // System.out.println("sentencia aceptada");
                         nextToken();
                     } else {
                         error(";");
@@ -107,25 +114,25 @@ public class AnalisisSintactico {
                 if (currentToken == ")") {
                     nextToken();
                     if (currentToken == "{") {
-                        System.out.println(currentToken);
+                        // System.out.println(currentToken);
                         // System.out.println("PUSH");
                         keys.push(currentToken);
                         nextToken();
 
                         Codigo();
                         if (currentToken == "}") {
-                            System.out.println(currentToken);
+                            // System.out.println(currentToken);
                             keys.pop();
                             // System.out.println("POP");
-                            System.out.println("sentencia aceptada");
+                            // System.out.println("sentencia aceptada");
                             nextToken();
 
                             Codigo();
                             // prevToken();
                             // System.out.println("CUR" + currentToken);
                         } else {
-                            currentLine++;
-                            error("Uncomplete flow control structure, } is expected");
+                            // currentLine++;
+                            error("Uncomplete flow control structure, } ");
                         }
                     } else {
                         error("{");
@@ -139,7 +146,7 @@ public class AnalisisSintactico {
             }
         } else {
             if (currentToken != "}" && currentToken != "FIN") {
-                error("Valid datatype, reserved word or flow control");
+                error("Datatype, reserved word or flow control");
             }
         }
     }
@@ -237,8 +244,9 @@ public class AnalisisSintactico {
     }
 
     public void error(String tipo) {
-        System.out.println("Error in line " + (currentLine + 1));
-        System.out.println(tipo + " is expected");
+        System.out.println("An error occurred during compilation.");
+        System.out.println("Error in line " + (currentLine) + ".");
+        System.out.println("'" + currentTokVal + "'. " + tipo + " is expected.");
         System.exit(0);
     }
 }
