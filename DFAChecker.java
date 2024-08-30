@@ -68,13 +68,13 @@ public class DFAChecker {
                 finalState = 2;
 
                 // Tipos de datos
-            } else if (currentState == 19 || currentState == 22 || currentState == 27 || currentState == 38
+            } else if (currentState == 19 || currentState == 22 || currentState == 38
                     || currentState == 41) {
                 finalState = 3;
 
                 // Palabras reservadas
             } else if (currentState == 45 || currentState == 55 || currentState == 61
-                    || currentState == 73 || currentState == 66 || currentState == 85 || currentState == 102) {
+                    || currentState == 73 || currentState == 66 || currentState == 85) {
                 finalState = 4;
 
             }
@@ -120,8 +120,8 @@ public class DFAChecker {
             else if (currentState == 12 || currentState == 13) {
                 finalState = 16;
 
-                // if for
-            } else if (currentState == 46 || currentState == 57) {
+                // if
+            } else if (currentState == 46) {
                 finalState = 17;
             } else if (currentState == 50) {
                 finalState = 19;
