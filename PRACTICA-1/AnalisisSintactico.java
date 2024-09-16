@@ -64,7 +64,8 @@ public class AnalisisSintactico {
                     if (currentToken == "]") {
                         nextToken();
                         if (currentToken == ";") {
-                            // ! System.out.println("sentencia aceptada");
+                            // !
+                            System.out.println("SENTENCIA ACEPTADA");
                             nextToken();
                             OptionalD();
                             return;
@@ -81,7 +82,8 @@ public class AnalisisSintactico {
             C();
 
             if (currentToken == ";") {
-                // ! System.out.println("sentencia aceptada");
+                // !
+                System.out.println("SENTENCIA ACEPTADA");
                 nextToken();
                 OptionalD();
                 return;
@@ -116,7 +118,8 @@ public class AnalisisSintactico {
             E();
             // * IMPRIMIR
             if (currentToken == ";") {
-                // ! System.out.println("sentencia aceptada");
+                // !
+                System.out.println("sentencia aceptada");
                 nextToken();
                 OptionalF();
                 return;
@@ -134,7 +137,8 @@ public class AnalisisSintactico {
                         nextToken();
                         E();
                         if (currentToken == ";") {
-                            // ! System.out.println("sentencia aceptada");
+                            // !
+                            System.out.println("SENTENCIA ACEPTADA");
                             nextToken();
                             OptionalF();
                             return;
@@ -153,7 +157,8 @@ public class AnalisisSintactico {
                 nextToken();
                 E();
                 if (currentToken == ";") {
-                    // ! System.out.println("sentencia aceptada");
+                    // !
+                    System.out.println("SENTENCIA ACEPTADA");
                     nextToken();
                     OptionalF();
                     return;
@@ -172,7 +177,7 @@ public class AnalisisSintactico {
     public void OptionalF() {
         if (currentToken == "id" || currentToken == "print") {
             F();
-        } else {
+        } else if (currentToken != "FIN") {
             error("print or id");
         }
     }

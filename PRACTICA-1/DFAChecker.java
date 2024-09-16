@@ -39,6 +39,7 @@ public class DFAChecker {
         int currentState = initialState;
 
         for (char symbol : input.toCharArray()) {
+            // System.out.println(symbol);
             if (!transitions.get(currentState).containsKey(symbol) && !transitions.get(currentState).containsKey('L')
                     && !transitions.get(currentState).containsKey('D')) {
                 return -1;
@@ -62,9 +63,12 @@ public class DFAChecker {
             if (currentState == 1) {
                 finalState = 1;
             }
-
             // Tipos de datos: entero, flotante
-            else if (currentState == 19 || currentState == 26) {
+            else if (currentState == 19) {
+                finalState = 2;
+            }
+
+            else if (currentState == 26) {
                 finalState = 3;
 
                 // Palabras reservadas: print

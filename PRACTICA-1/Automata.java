@@ -56,11 +56,15 @@ public class Automata {
         transitions.put(29, Map.of('L', 13));
 
         // transiciones para formar flotantes
-        transitions.put(14, Map.of('.', 30));
+        transitions.put(14, Map.of('D', 14, '.', 30)); // num
         transitions.put(30, Map.of('D', 31)); // float
+        transitions.put(31, Map.of('D', 31)); // float
+
+        //
+        transitions.put(13, Map.of('L', 13, 'D', 13)); // id
 
         // Estados de aceptación
-        Set<Integer> acceptingStates = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 13, 9, 19, 26, 29, 13, 14, 31);
+        Set<Integer> acceptingStates = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 13, 9, 19, 26, 29, 14, 31);
 
         // Autómata
         DFAChecker dfaChecker = new DFAChecker(transitions, acceptingStates, 0);
