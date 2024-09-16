@@ -78,7 +78,7 @@ public class DFAChecker {
                 finalState = 5;
 
                 // Números
-            } else if (currentState == 14) {
+            } else if (currentState == 14 || currentState == 31) {
                 finalState = 6;
 
             }
