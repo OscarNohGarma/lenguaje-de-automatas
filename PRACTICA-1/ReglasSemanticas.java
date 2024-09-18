@@ -6,8 +6,8 @@ public class ReglasSemanticas {
     // Aquí se debe almacenar la tabla de simbolos
     private Map<String, Symbol> symbolTable = new HashMap<>();
 
-    public ReglasSemanticas() {
-        // this.symbolTable = symbolTable;
+    public ReglasSemanticas(Map<String, Symbol> symbolTable) {
+        this.symbolTable = symbolTable;
     }
 
     // Sacamos los simbolos individualmente

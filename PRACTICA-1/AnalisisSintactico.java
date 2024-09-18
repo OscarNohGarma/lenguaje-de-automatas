@@ -7,6 +7,7 @@ public class AnalisisSintactico {
     private String currentTokVal;
     private int contador;
     private int currentLine;
+    private ReglasSemanticas reglasSemanticas;
 
     public AnalisisSintactico(ArrayList<Token> tokens) {
         this.tokens = tokens;
@@ -15,6 +16,7 @@ public class AnalisisSintactico {
         currentTokVal = tokens.get(contador).getValor();
         contador = 0;
         currentLine = 1;
+        reglasSemanticas = new ReglasSemanticas();
     }
 
     public ArrayList<Token> getTokens() {
@@ -182,14 +184,17 @@ public class AnalisisSintactico {
         }
     }
 
-    public void T() {
+    public String T() {
         if (currentToken == "entero") {
             nextToken();
+            return reglasSemanticas.getTypeForInteger();
         } else if (currentToken == "flotante") {
             nextToken();
+            return reglasSemanticas.getTypeForFloat();
         } else {
             error("Valid type");
         }
+        return "";
     }
 
     public void E() {
