@@ -193,6 +193,7 @@ public class AnalisisSintactico {
     }
 
     public void E() {
+
         if (currentToken == "id") {
             nextToken();
             if (currentToken == "[") {
@@ -223,8 +224,9 @@ public class AnalisisSintactico {
             } else {
                 error(")");
             }
-            E();
             // return;
+        } else {
+            error("id or num");
         }
         switch (currentToken) {
             case "+":
