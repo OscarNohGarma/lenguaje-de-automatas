@@ -72,7 +72,7 @@ public class DFAChecker {
                 finalState = 3;
 
                 // Palabras reservadas: print
-            } else if (currentState == 27) {
+            } else if (currentState == 29) {
                 finalState = 4;
 
             }

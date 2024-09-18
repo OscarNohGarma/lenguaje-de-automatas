@@ -80,7 +80,7 @@ public class AnalisisLexico {
 
                             // Lógica del autómata
                             Automata automata = new Automata(lexema.toString());
-                            // System.out.println("CADENA ACEPTADA: " + lexema); // * prueba cadena
+                            System.out.println("CADENA ACEPTADA: " + lexema); // * prueba cadena
                             classifyString(automata.checkAutomata(), lexema.toString());
                             // System.out.println("puntero inicial ahora es :" + punteroInicial);
                             // System.out.println("\n");
