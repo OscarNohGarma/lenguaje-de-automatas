@@ -1,4 +1,3 @@
-import java.beans.Expression;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -219,7 +218,7 @@ public class ReglasSemanticas {
         return assign(idLex, address, type);
     }
 
-    // Method to handle D -> T id [ num ] ;
+    // Para: D -> T id [ num ] ;
     public void handleDWithArrayD(String type, String idLex, int numValue, String numType) {
         if ("integer".equals(numType)) {
             // Call the method to calculate the array address
@@ -230,4 +229,147 @@ public class ReglasSemanticas {
         }
     }
 
+    // Para: E -> E + E
+    public Expression evaluateAdd(Expression E1, Expression E2) {
+        if (E1.getType().equals(E2.getType())) {
+            String resultType = E1.getType(); //
+            double resultValue;
+
+            if (resultType.equals("entero")) {
+                resultValue = Integer.parseInt(E1.getValue()) + Integer.parseInt(E2.getValue());
+            } else if (resultType.equals("flotante")) {
+                resultValue = Double.parseDouble(E1.getValue()) + Double.parseDouble(E2.getValue());
+            } else {
+                System.out.println("Error: Unsupported types");
+                return null;
+            }
+
+            return new Expression(resultType, String.valueOf(resultValue));
+        } else {
+            System.out.println("Error: Type mismatch");
+            return null;
+        }
+    }
+
+    // Para E -> E1 / E2
+    public Expression evaluateDiv(Expression E1, Expression E2) {
+        if (E1.getType().equals(E2.getType())) {
+            String resultType = E1.getType();
+            double resultValue;
+
+            if (resultType.equals("entero")) {
+                int divisor = Integer.parseInt(E2.getValue());
+                if (divisor == 0) {
+                    System.out.println("Error: Division by zero is not allowed.");
+                    return null;
+                } else {
+                    resultValue = Integer.parseInt(E1.getValue()) / divisor;
+                }
+            } else if (resultType.equals("flotante")) {
+                double divisor = Double.parseDouble(E2.getValue());
+                if (divisor == 0.0) {
+                    System.out.println("Error: Division by zero is not allowed.");
+                    return null;
+                } else {
+                    resultValue = Double.parseDouble(E1.getValue()) / divisor;
+                }
+            } else {
+                System.out.println("Error: Unsupported types.");
+                return null;
+            }
+
+            return new Expression(resultType, String.valueOf(resultValue));
+        } else {
+            System.out.println("Error: Type mismatch");
+            return null;
+        }
+
+    }
+
+    // E -> E * E
+    public Expression evaluateMul(Expression E1, Expression E2) {
+        if (E1.getType().equals(E2.getType())) {
+            String resultType = E1.getType();
+            double resultValue;
+
+            if (resultType.equals("entero")) {
+                resultValue = Integer.parseInt(E1.getValue()) * Integer.parseInt(E2.getValue());
+            } else if (resultType.equals("flotante")) {
+                resultValue = Double.parseDouble(E1.getValue()) * Double.parseDouble(E2.getValue());
+            } else {
+                System.out.println("Error: Unsupported types.");
+                return null;
+            }
+
+            return new Expression(resultType, String.valueOf(resultValue));
+        } else {
+            System.out.println("Error: Type mismatch");
+            return null;
+        }
+    }
+
+    // E -> E1 - E2
+    public Expression evaluateSub(Expression E1, Expression E2) {
+        if (E1.getType().equals(E2.getType())) {
+            String resultType = E1.getType();
+            double resultValue;
+
+            if (resultType.equals("entero")) {
+                resultValue = Integer.parseInt(E1.getValue()) - Integer.parseInt(E2.getValue());
+            } else if (resultType.equals("flotante")) {
+                resultValue = Double.parseDouble(E1.getValue()) - Double.parseDouble(E2.getValue());
+            } else {
+                System.out.println("Error: Unsupported types.");
+                return null;
+            }
+
+            return new Expression(resultType, String.valueOf(resultValue));
+        } else {
+            System.out.println("Error: Type mismatch.");
+            return null;
+        }
+    }
+
+    // E -> -E
+    public Expression evaluateNegation(Expression E) {
+        // Revisar si es num
+        if (E.getType().equals("entero") || E.getType().equals("flotante")) {
+            String resultType = E.getType();
+            double resultValue;
+
+            if (resultType.equals("entero")) {
+                resultValue = -Integer.parseInt(E.getValue());
+            } else if (resultType.equals("flotante")) {
+                resultValue = -Double.parseDouble(E.getValue());
+            } else {
+                System.out.println("Error: Unsupported type");
+                return null;
+            }
+
+            return new Expression(resultType, String.valueOf(resultValue));
+        } else {
+            // Error: Type is not compatible with negation
+            System.out.println("Error: Type " + E.getType() + " is not valid for negation.");
+            return null;
+        }
+    }
+
+}
+
+class Expression {
+    private String type;
+    private String value;
+
+    public Expression(String type, String value) {
+        this.type = type;
+        this.value = value;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
