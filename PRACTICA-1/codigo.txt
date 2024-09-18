@@ -4,4 +4,4 @@ flotante var2 , var3 ;
 var2 = 2 * 3 ;
 var3 = 27.533 ;
 var2 = var1 ;
-var1 [ 2 ] = var3 ;
+var1 [ 2 ] = - ( 3 ) ;
