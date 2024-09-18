@@ -6,8 +6,8 @@ public class ReglasSemanticas {
     // Aquí se debe almacenar la tabla de simbolos
     private Map<String, Symbol> symbolTable = new HashMap<>();
 
-    public ReglasSemanticas(Map<String, Symbol> symbolTable) {
-        this.symbolTable = symbolTable;
+    public ReglasSemanticas() {
+        // this.symbolTable = symbolTable;
     }
 
     // Sacamos los simbolos individualmente
@@ -22,7 +22,7 @@ public class ReglasSemanticas {
 
         public Symbol(String type, String value) {
             this.type = type;
-            this.type = value;
+            this.value = value;
         }
 
         public Symbol(String type, int baseAddress) {
@@ -39,7 +39,7 @@ public class ReglasSemanticas {
         }
 
         public int getBaseAddress() {
-            return baseAddress; // Getter for base address
+            return baseAddress;
         }
 
     }
@@ -348,9 +348,19 @@ public class ReglasSemanticas {
 
             return new Expression(resultType, String.valueOf(resultValue));
         } else {
-            // Error: Type is not compatible with negation
-            System.out.println("Error: Type " + E.getType() + " is not valid for negation.");
+            System.out.println("Error: Type " + E.getType() + " is not valid.");
             return null;
+        }
+    }
+
+    // E -> print E
+    public void printExpressionValue(Expression E) {
+        String value = E.getValue();
+
+        if (value != null) {
+            System.out.println("Impresión: " + value);
+        } else {
+            System.out.println("Error: Unable to print value.");
         }
     }
 
