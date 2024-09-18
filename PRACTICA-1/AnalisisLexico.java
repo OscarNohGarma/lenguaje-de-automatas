@@ -3,7 +3,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
+
+import java.util.Map;
 
 public class AnalisisLexico {
 
@@ -425,6 +428,11 @@ class Token {
     public String getTipo() {
         return tipo;
     }
+
+    @Override
+    public String toString() {
+        return getValor() + " " + getTipo();
+    }
 }
 
 class Main {
@@ -436,18 +444,23 @@ class Main {
         al.leerSimbolos();
         boolean val = al.validarTokens();
         AnalisisSintactico as = new AnalisisSintactico(al.getTokens());
+        Map<String, Object> mapSymbols = new HashMap<>();
 
         if (val) {
             as.P();
             System.out.println("\nSuccessfully compiled.\n");
+            mapSymbols.put(null, null);
 
             System.out.println("+-------------Tabla de símbolos-------------+");
             System.out.printf("| %-20s| %-20s|%n", "Valor", "Tipo");
             System.out.println("+---------------------+---------------------+");
             for (Token token : as.getTokens()) {
                 System.out.printf("| %-20s| %-20s|%n", token.getValor(), token.getTipo());
+                mapSymbols.put(token.getValor(), token);
             }
             System.out.println("+---------------------+---------------------+");
+
         }
+
     }
 }
