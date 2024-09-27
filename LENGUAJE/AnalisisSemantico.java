@@ -1,5 +1,6 @@
 package lenguaje;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class AnalisisSemantico {
 
     // <sentencia> → tipo id = <valor> ;
     // Si id.tipo == <valor>.tipo entonces id.valor = <valor>.valor
-    public void verificarAsignacion(String id, String valor) {
+    public void verificarAsignacion(String id, Valor valor) {
         if (!tablaSimbolos.containsKey(id)) {
             System.out.println("Error: Variable " + id + " no ha sido declarada.");
             return;
@@ -32,35 +33,25 @@ public class AnalisisSemantico {
         Simbolo simbolo = tablaSimbolos.get(id);
 
         // Si id.tipo == <valor>.tipo
-        if (simbolo.getTipo().equals(getTipo(valor))) {
-            simbolo.setValor(valor);
+        if (simbolo.getTipo().equals(valor.tipo)) {
+            simbolo.setValor(valor.valor);
+
         } else {
             System.out.println("Error: Tipo de dato incompatible. Se esperaba " + simbolo.getTipo()
-                    + " pero se recibió " + getTipo(valor));
+                    + " pero se recibió " + valor.tipo);
         }
     }
 
-    private String getTipo(String valor) {
-        if (valor.equalsIgnoreCase("true") || valor.equalsIgnoreCase("false")) {
-            return "boolean"; // Tipo boolean
-        }
-
-        try {
-            Integer.parseInt(valor);
-            return "int"; // Tipo entero
-        } catch (NumberFormatException e1) {
-            if (valor.endsWith(".txt")) {
-                return "file"; // Tipo archivo
-            }
-
-            return "String"; // Tipo cadena
-        }
-    }
-
-    // <valor> → numero
-    // <valor>.tipo = table(tipo, num.lex)
-    // <valor>.valor = table(valor, num.lex)
+    // <valor> → numero | <mensaje> | booelano | id
+    // <valor>.tipo = table(tipo, lex)
+    // <valor>.valor = table(valor, lex)
     public Valor verificarValor(String lexema) {
+
+        if (tablaSimbolos.containsKey(lexema)) {
+            Simbolo simbolo = tablaSimbolos.get(lexema);
+            return new Valor(simbolo.tipo, simbolo.valor);
+        }
+
         String tipo;
         Object valor;
 
@@ -88,8 +79,29 @@ public class AnalisisSemantico {
         } else {
             Simbolo nuevoSimbolo = new Simbolo(lexema, tipo, valor);
             tablaSimbolos.put(lexema, nuevoSimbolo);
-
             return new Valor(tipo, valor);
+        }
+    }
+
+    // <valor> → read ( cadena )
+    // Si cadena.tipo == 'String' entonces cadena.valor = table(cadena.valor,
+    // cadena.lex) <valor>.tipo = 'file';
+    public Valor procesarRead(String cadena) {
+        Valor valorCadena = verificarValor(cadena);
+
+        if (valorCadena != null && valorCadena.tipo.equals("String")) {
+            String nombreArchivo = (String) valorCadena.valor;
+            File archivo = new File("./lenguaje/" + nombreArchivo);
+
+            if (archivo.exists()) {
+                return new Valor("file", archivo);
+            } else {
+                System.out.println("Error: El archivo " + nombreArchivo + " no existe.");
+                return null;
+            }
+        } else {
+            System.out.println("Error: Se esperaba una cadena para read, pero se recibió: " + cadena);
+            return null;
         }
     }
 

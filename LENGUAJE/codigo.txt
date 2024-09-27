@@ -1,2 +1,5 @@
 int variable1 = 1233 ; 
 print ( "hola" ) ; 
+boolean variable3 = true ; 
+int var3 = variable1 ; 
+file vare3 = read ( "archivo.txt" ) ; 

@@ -85,11 +85,11 @@ public class AnalisisSintactico {
                 nextToken();
                 if (currentToken == "=") {
                     nextToken();
-                    String valor = currentTokVal;
+                    // String valor = currentTokVal;
                     this.valor = Valor();
 
                     analizadorSemantico.verificarDeclaracion(id, tipo);
-                    analizadorSemantico.verificarAsignacion(id, valor);
+                    analizadorSemantico.verificarAsignacion(id, this.valor);
                     if (currentToken == ";") {
                         // System.out.println("sentencia aceptada");
                         nextToken();
@@ -173,8 +173,6 @@ public class AnalisisSintactico {
         contador = contador - 4;
         currentTokVal = tokens.get(contador).getValor();
         String reservada = currentTokVal;
-        System.out.println("valor actual");
-        System.out.println(currentTokVal);
         switch (reservada) {
             case "generateFile":
                 generateFile();
@@ -251,11 +249,11 @@ public class AnalisisSintactico {
             if (currentToken == "(") {
                 nextToken();
                 if (currentToken == "cadena") {
-                    String cadena = currentToken;
+                    String cadena = currentTokVal;
                     nextToken();
                     if (currentToken == ")") {
                         nextToken();
-                        return analizadorSemantico.verificarValor(cadena);
+                        return analizadorSemantico.procesarRead(cadena);
                     } else {
                         error(")");
                     }
@@ -266,21 +264,23 @@ public class AnalisisSintactico {
                 error("(");
             }
         } else if (currentToken == "cadena") {
-            String cadenaCompleta = Mensaje();
-            return analizadorSemantico.verificarValor(cadenaCompleta);
+            Valor mensajeValor = Mensaje();
+
+            return new Valor(mensajeValor.tipo, mensajeValor.valor);
         }
         error("Valid data type");
         return null;
 
     }
 
-    public String Mensaje() {
+    public Valor Mensaje() {
         String mensajeCompleto = "";
 
         if (currentToken == "cadena") {
             mensajeCompleto = currentTokVal;
             nextToken();
         }
+
         while (currentToken == "+") {
             nextToken();
             if (currentToken == "cadena") {
@@ -291,7 +291,7 @@ public class AnalisisSintactico {
             }
         }
 
-        return mensajeCompleto;
+        return new Valor("String", mensajeCompleto);
     }
 
     public void Parametros() {
