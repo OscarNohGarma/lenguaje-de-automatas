@@ -1,5 +1,11 @@
+package lenguaje;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class AnalisisSintactico {
@@ -10,6 +16,8 @@ public class AnalisisSintactico {
     private int contador;
     private int currentLine;
     private Stack<String> keys;
+    private AnalisisSemantico analizadorSemantico;
+    private Valor valor;
 
     public AnalisisSintactico(ArrayList<Token> tokens) {
         this.tokens = tokens;
@@ -19,6 +27,8 @@ public class AnalisisSintactico {
         keys = new Stack<>();
         contador = 0;
         currentLine = 1;
+        this.analizadorSemantico = new AnalisisSemantico();
+        this.valor = new Valor("", "");
     }
 
     public ArrayList<Token> getTokens() {
@@ -68,12 +78,18 @@ public class AnalisisSintactico {
     public void Sentencia() {
         // System.out.println(currentToken);
         if (currentToken == "tipo") {
+            String tipo = currentTokVal;
             nextToken();
             if (currentToken == "id") {
+                String id = currentTokVal;
                 nextToken();
                 if (currentToken == "=") {
                     nextToken();
-                    Valor();
+                    String valor = currentTokVal;
+                    this.valor = Valor();
+
+                    analizadorSemantico.verificarDeclaracion(id, tipo);
+                    analizadorSemantico.verificarAsignacion(id, valor);
                     if (currentToken == ";") {
                         // System.out.println("sentencia aceptada");
                         nextToken();
@@ -96,6 +112,7 @@ public class AnalisisSintactico {
                     nextToken();
                     if (currentToken == ";") {
                         // System.out.println("sentencia aceptada");
+                        ejecutarReservada();
                         nextToken();
                     } else {
                         error(";");
@@ -152,26 +169,93 @@ public class AnalisisSintactico {
         }
     }
 
-    public void Valor() {
+    private void ejecutarReservada() {
+        contador = contador - 4;
+        currentTokVal = tokens.get(contador).getValor();
+        String reservada = currentTokVal;
+        System.out.println("valor actual");
+        System.out.println(currentTokVal);
+        switch (reservada) {
+            case "generateFile":
+                generateFile();
+                break;
+            case "print":
+                print();
+                break;
+            case "search":
+                search();
+                break;
+            default:
+                error("Reservada");
+                break;
+        }
+
+        contador = contador + 4;
+        currentTokVal = tokens.get(contador).getValor();
+    }
+
+    private void generateFile() {
+        String texto = "";
+        try {
+            PrintWriter writer = new PrintWriter(new File("output.txt"));
+            writer.println(texto);
+            writer.close();
+            System.out.println("Archivo generado con éxito. con el nombre output.txt");
+        } catch (IOException e) {
+            System.out.println("Error al crear el archivo.");
+        }
+    }
+
+    private void print() {
+        System.out.println(currentTokVal);
+    }
+
+    // Busca si existe la palabra en un archivo recibe palabra y nombre del archivo
+    private void search() {
+        String palabra = "";
+        String nombreArchivo = "";
+
+        try (Scanner scanner = new Scanner(new File(nombreArchivo))) {
+            boolean encontrado = false;
+            while (scanner.hasNextLine()) {
+                String linea = scanner.nextLine();
+                if (linea.contains(palabra)) {
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (encontrado) {
+                System.out.println("La palabra fue encontrada en el archivo.");
+            } else {
+                System.out.println("La palabra no fue encontrada en el archivo.");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("El archivo no existe.");
+        }
+    }
+
+    public Valor Valor() {
+        String lexema = currentTokVal;
 
         if (currentToken == "numero") {
             nextToken();
-            return;
+            return analizadorSemantico.verificarValor(lexema);
         } else if (currentToken == "booleano") {
             nextToken();
-            return;
+            return analizadorSemantico.verificarValor(lexema);
         } else if (currentToken == "id") {
             nextToken();
-            return;
+            return analizadorSemantico.verificarValor(lexema);
         } else if (currentToken == "read") {
             nextToken();
             if (currentToken == "(") {
                 nextToken();
                 if (currentToken == "cadena") {
+                    String cadena = currentToken;
                     nextToken();
                     if (currentToken == ")") {
                         nextToken();
-                        return;
+                        return analizadorSemantico.verificarValor(cadena);
                     } else {
                         error(")");
                     }
@@ -182,25 +266,32 @@ public class AnalisisSintactico {
                 error("(");
             }
         } else if (currentToken == "cadena") {
-            Mensaje();
-            return;
+            String cadenaCompleta = Mensaje();
+            return analizadorSemantico.verificarValor(cadenaCompleta);
         }
         error("Valid data type");
+        return null;
+
     }
 
-    public void Mensaje() {
+    public String Mensaje() {
+        String mensajeCompleto = "";
 
         if (currentToken == "cadena") {
+            mensajeCompleto = currentTokVal;
             nextToken();
         }
-        if (currentToken == "+") {
+        while (currentToken == "+") {
             nextToken();
             if (currentToken == "cadena") {
-                Mensaje();
+                mensajeCompleto += currentTokVal;
+                nextToken();
             } else {
-                error("String");
+                error("Expected string after '+'");
             }
         }
+
+        return mensajeCompleto;
     }
 
     public void Parametros() {

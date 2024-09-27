@@ -1,3 +1,5 @@
+package lenguaje;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -462,7 +464,7 @@ class MainCat {
         // return;
         // }
 
-        File file = new File("codigo.cat");
+        File file = new File("lenguaje/codigo.txt");
         // File file = new File(args[0]);
         // if (!file.exists()) {
         // System.out.println("File not found: " + args[0]);

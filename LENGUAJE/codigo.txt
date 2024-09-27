@@ -1,0 +1,2 @@
+int variable1 = 1233 ; 
+print ( "hola" ) ; 
