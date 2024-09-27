@@ -172,6 +172,7 @@ public class AnalisisSintactico {
     private void ejecutarReservada() {
         contador = contador - 4;
         currentTokVal = tokens.get(contador).getValor();
+        prevToken();
         String reservada = currentTokVal;
         switch (reservada) {
             case "generateFile":
@@ -291,7 +292,7 @@ public class AnalisisSintactico {
             }
         }
 
-        return new Valor("String", mensajeCompleto);
+        return new Valor("string", mensajeCompleto);
     }
 
     public void Parametros() {

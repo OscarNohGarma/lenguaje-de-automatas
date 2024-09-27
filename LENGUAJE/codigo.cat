@@ -2,8 +2,9 @@ int variable1 = 1233 ;
 int var1v2 = variable1 ;
 boolean variable3 = true ;
 file archivoEx = read (  "archivo.txt" ) ;
+
 string variable2 = "1233" + "3" + "w" + "xd" ;
-print ( xr == 3  and "hola" == "hola" or "hola\n" == "hola" ) ;
+print ( 3 == 3  and "hola" == "hola" or "hola" == "hola" ) ;
 if ( variable == 1233 ) { 
     file archivo1 = read ( "archivo.txt" ) ;
     print ( "homundo" ) ;

@@ -464,7 +464,7 @@ class MainCat {
         // return;
         // }
 
-        File file = new File("lenguaje/codigo.txt");
+        File file = new File("lenguaje/codigo.cat");
         // File file = new File(args[0]);
         // if (!file.exists()) {
         // System.out.println("File not found: " + args[0]);

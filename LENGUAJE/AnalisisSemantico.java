@@ -62,7 +62,7 @@ public class AnalisisSemantico {
             tipo = "boolean";
             valor = Boolean.parseBoolean(lexema);
         } else if (lexema.startsWith("\"") && lexema.endsWith("\"")) {
-            tipo = "String";
+            tipo = "string";
             valor = lexema.substring(1, lexema.length() - 1);
         } else {
             System.out.println("Error: Tipo de dato desconocido para el lexema: " + lexema);
@@ -89,7 +89,7 @@ public class AnalisisSemantico {
     public Valor procesarRead(String cadena) {
         Valor valorCadena = verificarValor(cadena);
 
-        if (valorCadena != null && valorCadena.tipo.equals("String")) {
+        if (valorCadena != null && valorCadena.tipo.equals("string")) {
             String nombreArchivo = (String) valorCadena.valor;
             File archivo = new File("./lenguaje/" + nombreArchivo);
 
