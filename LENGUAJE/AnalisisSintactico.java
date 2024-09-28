@@ -104,6 +104,7 @@ public class AnalisisSintactico {
             }
 
         } else if (currentToken == "reservada") {
+            String resEval = currentTokVal;
             nextToken();
             if (currentToken == "(") {
                 nextToken();
@@ -112,7 +113,7 @@ public class AnalisisSintactico {
                     nextToken();
                     if (currentToken == ";") {
                         // System.out.println("sentencia aceptada");
-                        ejecutarReservada();
+                        ejecutarReservada(resEval);
                         nextToken();
                     } else {
                         error(";");
@@ -169,12 +170,13 @@ public class AnalisisSintactico {
         }
     }
 
-    private void ejecutarReservada() {
+    private void ejecutarReservada(String resEval) {
         contador = contador - 4;
         currentTokVal = tokens.get(contador).getValor();
-        prevToken();
+        // prevToken();
         String reservada = currentTokVal;
-        switch (reservada) {
+        System.out.println("Evalacuión: " + resEval);
+        switch (resEval) {
             case "generateFile":
                 generateFile();
                 break;
