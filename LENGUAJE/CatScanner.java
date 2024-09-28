@@ -6,15 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CatScanner {
 
     private File file;
     private ArrayList<Token> tokens;
     private ArrayList<Character> simbolos;
-    private String codigo;
+
     private Stack<String> keys;
     private int currentLinea;
     private int currentCol;
@@ -480,13 +478,13 @@ class MainCat {
             as.Codigo();
             System.out.println("\nSuccessfully compiled.\n");
 
-            System.out.println("+-------------Tabla de símbolos-------------+");
-            System.out.printf("| %-20s| %-20s|%n", "Valor", "Tipo");
-            System.out.println("+---------------------+---------------------+");
-            for (Token token : as.getTokens()) {
-                System.out.printf("| %-20s| %-20s|%n", token.getValor(), token.getTipo());
-            }
-            System.out.println("+---------------------+---------------------+");
+            // System.out.println("+-------------Tabla de símbolos-------------+");
+            // System.out.printf("| %-20s| %-20s|%n", "Valor", "Tipo");
+            // System.out.println("+---------------------+---------------------+");
+            // for (Token token : as.getTokens()) {
+            // System.out.printf("| %-20s| %-20s|%n", token.getValor(), token.getTipo());
+            // }
+            // System.out.println("+---------------------+---------------------+");
         }
     }
 }

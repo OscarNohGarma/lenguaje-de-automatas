@@ -13,7 +13,6 @@ public class AnalisisLexico {
     private File file;
     private ArrayList<Token> tokens;
     private ArrayList<Character> simbolos;
-    private String odigo;
     private Stack<String> keys;
     private int currentLinea;
     private int currentCol;

@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class AnalisisSintactico {
 
@@ -108,12 +110,12 @@ public class AnalisisSintactico {
             nextToken();
             if (currentToken == "(") {
                 nextToken();
-                Parametros();
+                ArrayList<Valor> parametros = Parametros();
                 if (currentToken == ")") {
                     nextToken();
                     if (currentToken == ";") {
                         // System.out.println("sentencia aceptada");
-                        ejecutarReservada(resEval);
+                        ejecutarReservada(resEval, parametros);
                         nextToken();
                     } else {
                         error(";");
@@ -129,7 +131,7 @@ public class AnalisisSintactico {
             nextToken();
             if (currentToken == "(") {
                 nextToken();
-                Parametros();
+                ArrayList<Valor> parametros = Parametros();
                 if (currentToken == ")") {
                     nextToken();
                     if (currentToken == "{") {
@@ -170,19 +172,19 @@ public class AnalisisSintactico {
         }
     }
 
-    private void ejecutarReservada(String resEval) {
+    private void ejecutarReservada(String resEval, ArrayList<Valor> parametros) {
         // contador = contador - 4;
         // currentTokVal = tokens.get(contador).getValor();
-        System.out.println("Evalacuión: " + resEval);
+        // System.out.println("Evalacuión: " + resEval);
         switch (resEval) {
             case "generateFile":
-                generateFile();
+                generateFile(parametros);
                 break;
             case "print":
-                print();
+                print(parametros);
                 break;
             case "search":
-                search();
+                search(parametros);
                 break;
             default:
                 error("Reservada");
@@ -193,43 +195,96 @@ public class AnalisisSintactico {
         // currentTokVal = tokens.get(contador).getValor();
     }
 
-    private void generateFile() {
-        String texto = "";
-        try {
-            PrintWriter writer = new PrintWriter(new File("output.txt"));
-            writer.println(texto);
-            writer.close();
-            System.out.println("Archivo generado con éxito. con el nombre output.txt");
-        } catch (IOException e) {
-            System.out.println("Error al crear el archivo.");
+    private void generateFile(ArrayList<Valor> parametros) {
+
+        if (parametros.size() == 2) {
+            if (parametros.get(1).tipo.equals("string")) {
+                try {
+                    PrintWriter writer = new PrintWriter(new File("./" + parametros.get(1).valor.toString()));
+                    writer.println(parametros.get(0).valor.toString());
+                    writer.close();
+                    System.out
+                            .println("Archivo generado con éxito. con el nombre " + parametros.get(1).valor.toString());
+                } catch (IOException e) {
+                    System.out.println("Error al crear el archivo.");
+                }
+            } else {
+                System.out.println(
+                        "Error in line " + (currentLine - 1)
+                                + ". generateFile: file name needs to be a string");
+                System.exit(0);
+            }
+        } else {
+            System.out.println(
+                    "Error in line " + (currentLine - 1)
+                            + ". generateFile: two parameters (content , file name) are expected");
+            System.exit(0);
         }
     }
 
-    private void print() {
-        System.out.println("Impresion" + currentTokVal);
+    private void print(ArrayList<Valor> parametros) {
+        if (parametros.size() == 1) {
+            if (parametros.get(0).tipo.equals("file")) {
+                try (BufferedReader lector = new BufferedReader(new FileReader(parametros.get(0).valor.toString()))) {
+                    String linea;
+
+                    // Leer el archivo línea por línea
+                    while ((linea = lector.readLine()) != null) {
+                        // Imprimir cada línea leída
+                        System.out.println(linea);
+                    }
+
+                } catch (IOException e) {
+                    // Manejar excepción en caso de error
+                    System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
+                }
+            } else {
+
+                System.out.println(parametros.get(0).valor);
+            }
+        } else {
+            System.out.println("Error in line " + (currentLine - 1) + ". print: Only one parameter is expected");
+            System.exit(0);
+        }
     }
 
     // Busca si existe la palabra en un archivo recibe palabra y nombre del archivo
-    private void search() {
-        String palabra = "";
-        String nombreArchivo = "";
-
-        try (Scanner scanner = new Scanner(new File(nombreArchivo))) {
-            boolean encontrado = false;
-            while (scanner.hasNextLine()) {
-                String linea = scanner.nextLine();
-                if (linea.contains(palabra)) {
-                    encontrado = true;
-                    break;
+    private void search(ArrayList<Valor> parametros) {
+        if (parametros.size() == 2) {
+            if (parametros.get(1).tipo.equals("file")) {
+                if (!parametros.get(0).tipo.equals("string")) {
+                    System.out.println("Error in line " + (currentLine - 1)
+                            + ". seatch:  content needs to be a string type ");
+                    System.exit(0);
                 }
-            }
-            if (encontrado) {
-                System.out.println("La palabra fue encontrada en el archivo.");
+
+                try (Scanner scanner = new Scanner(new File(parametros.get(1).valor.toString()))) {
+                    boolean encontrado = false;
+                    while (scanner.hasNextLine()) {
+                        String linea = scanner.nextLine();
+                        if (linea.contains(parametros.get(0).valor.toString())) {
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    if (encontrado) {
+                        System.out.println("La cadena fue encontrada en el archivo.");
+                    } else {
+                        System.out.println("La cadena no fue encontrada en el archivo.");
+                    }
+                } catch (FileNotFoundException e) {
+                    System.out.println("El archivo no existe.");
+                }
             } else {
-                System.out.println("La palabra no fue encontrada en el archivo.");
+                System.out.println(
+                        "Error in line " + (currentLine - 1)
+                                + ". search:  file needs to be a file type");
+                System.exit(0);
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("El archivo no existe.");
+        } else {
+            System.out.println("Error in line " + (currentLine - 1)
+                    + ". search: two parameters (content , file) are expected");
+            System.exit(0);
         }
     }
 
@@ -278,62 +333,77 @@ public class AnalisisSintactico {
         String mensajeCompleto = "";
 
         if (currentToken == "cadena") {
-            mensajeCompleto = currentTokVal;
+            mensajeCompleto = currentTokVal.substring(1, currentTokVal.length() - 1);
+            ;
             nextToken();
         }
 
         while (currentToken == "+") {
             nextToken();
             if (currentToken == "cadena") {
-                mensajeCompleto += currentTokVal;
+                mensajeCompleto += currentTokVal.substring(1, currentTokVal.length() - 1);
                 nextToken();
             } else {
                 error("Expected string after '+'");
             }
         }
-
         return new Valor("string", mensajeCompleto);
     }
 
-    public void Parametros() {
-        Valor();
+    public ArrayList<Valor> Parametros() {
+        ArrayList<Valor> parametros = new ArrayList<>();
+        Valor val1 = Valor();
+        parametros.add(val1);
+        // System.out.println(val.valor);
+        // System.out.println(val.tipo);
         if (currentToken == ")") {
-            return;
+            return parametros;
         }
         if (currentToken == ",") {
             nextToken();
-            Valor();
-            return;
+            Valor val2 = Valor();
+            parametros.add(val2);
+            return parametros;
         }
         prevToken();
-        Validacion();
+        parametros.clear();
+        parametros.add(Validacion());
+
+        return parametros;
 
     }
 
-    public void Validacion() {
-        Condicion();
+    public Valor Validacion() {
+        Valor C = Condicion();
 
         if (currentToken == ")") {
-            return;
+            return C;
 
         } else if (currentToken == "op logico") {
+            String opL = currentTokVal;
             nextToken();
-            Validacion();
+            Valor vali = Validacion();
+            return analizadorSemantico.validacion(C, vali, opL);
+
         } else {
             error("Logical operator");
         }
         // System.out.println(currentToken);
+        return null;
 
     }
 
-    public void Condicion() {
-        Valor();
+    public Valor Condicion() {
+        Valor v1 = Valor();
         if (currentToken == "op comp") {
+            String opC = currentTokVal;
             nextToken();
-            Valor();
+            Valor v2 = Valor();
+            return analizadorSemantico.comparacion(v1, v2, opC);
         } else {
             error("Comparation operator");
         }
+        return null;
     }
 
     public void error(String tipo) {

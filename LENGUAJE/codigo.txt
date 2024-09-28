@@ -1,5 +1,8 @@
-int variable1 = 1233 ; 
-print ( "hola" ) ; 
-boolean variable3 = true ; 
-int var3 = variable1 ; 
-file vare3 = read ( "archivo.txt" ) ; 
+string variable2 = "1233" + "3" + "w" + "xd" ;
+int variable1 = 1233 ;
+int var1v2 = variable1 ;
+print ( variable2  ) ;
+boolean variable3 = true ;
+file archivoEx = read (  "archivo.txt" ) ;
+print (  2 == 2 and variable1 == 1233 ) ;
+generateFile ( "Ejemplo de texto" , "archivo.txt" )

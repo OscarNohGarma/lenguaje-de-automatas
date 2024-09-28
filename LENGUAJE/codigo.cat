@@ -1,8 +1,21 @@
+string variable2 = "1233" + " primero " + "w" + "xd" ;
 int variable1 = 1233 ;
 int var1v2 = variable1 ;
 boolean variable3 = true ;
+
+print ( variable2  ) ;
+print ( " " ) ;
+
+generateFile ( variable2 , "archivo.txt" ) ;
+generateFile ( "Este es un segundo archivo - MODIFICADO" , "archivo2.txt" ) ;
+print ( " " ) ;
+
 file archivoEx = read (  "archivo.txt" ) ;
 
-string variable2 = "1233" + "3" + "w" + "xd" ;
-print ( "ejemplo" ) ;
-print ( 2 == 2 and "hola" != " " ) ;
+print ( archivoEx ) ;
+print ( read (  "archivo2.txt" ) ) ;
+print ( " " ) ;
+
+print (  2 == variable3 and variable1 == 1233 ) ;
+
+search ( "primero7" ,  archivoEx ) ;
