@@ -5,3 +5,4 @@ file archivoEx = read (  "archivo.txt" ) ;
 
 string variable2 = "1233" + "3" + "w" + "xd" ;
 print ( "ejemplo" ) ;
+print ( 2 == 2 and "hola" != " " ) ;

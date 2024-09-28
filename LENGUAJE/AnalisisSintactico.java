@@ -171,10 +171,8 @@ public class AnalisisSintactico {
     }
 
     private void ejecutarReservada(String resEval) {
-        contador = contador - 4;
-        currentTokVal = tokens.get(contador).getValor();
-        // prevToken();
-        String reservada = currentTokVal;
+        // contador = contador - 4;
+        // currentTokVal = tokens.get(contador).getValor();
         System.out.println("Evalacuión: " + resEval);
         switch (resEval) {
             case "generateFile":
@@ -191,8 +189,8 @@ public class AnalisisSintactico {
                 break;
         }
 
-        contador = contador + 4;
-        currentTokVal = tokens.get(contador).getValor();
+        // contador = contador + 4;
+        // currentTokVal = tokens.get(contador).getValor();
     }
 
     private void generateFile() {
@@ -208,7 +206,7 @@ public class AnalisisSintactico {
     }
 
     private void print() {
-        System.out.println(currentTokVal);
+        System.out.println("Impresion" + currentTokVal);
     }
 
     // Busca si existe la palabra en un archivo recibe palabra y nombre del archivo
