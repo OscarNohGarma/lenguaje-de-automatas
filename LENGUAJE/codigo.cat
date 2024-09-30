@@ -18,4 +18,4 @@ print ( " " ) ;
 
 print (  2 == variable3 and variable1 == 1233 ) ;
 
-search ( "primero7" ,  archivoEx ) ;
+search ( "primero" ,  archivoEx ) ;

@@ -3,6 +3,13 @@ package lenguaje;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class AnalisisSemantico {
     private Map<String, Simbolo> tablaSimbolos;
@@ -156,5 +163,120 @@ public class AnalisisSemantico {
             System.exit(0);
         }
         return null;
+    }
+
+    public void ejecutarReservada(String resEval, ArrayList<Valor> parametros, int currentLine) {
+        // contador = contador - 4;
+        // currentTokVal = tokens.get(contador).getValor();
+        // System.out.println("Evalacuión: " + resEval);
+        switch (resEval) {
+            case "generateFile":
+                generateFile(parametros, currentLine);
+                break;
+            case "print":
+                print(parametros, currentLine);
+                break;
+            case "search":
+                search(parametros, currentLine);
+                break;
+            default:
+                break;
+        }
+
+        // contador = contador + 4;
+        // currentTokVal = tokens.get(contador).getValor();
+    }
+
+    private void generateFile(ArrayList<Valor> parametros, int currentLine) {
+
+        if (parametros.size() == 2) {
+            if (parametros.get(1).tipo.equals("string")) {
+                try {
+                    PrintWriter writer = new PrintWriter(new File("./" + parametros.get(1).valor.toString()));
+                    writer.println(parametros.get(0).valor.toString());
+                    writer.close();
+                    System.out
+                            .println("Archivo generado con éxito. con el nombre " + parametros.get(1).valor.toString());
+                } catch (IOException e) {
+                    System.out.println("Error al crear el archivo.");
+                }
+            } else {
+                System.out.println(
+                        "Error in line " + (currentLine - 1)
+                                + ". generateFile: file name needs to be a string");
+                System.exit(0);
+            }
+        } else {
+            System.out.println(
+                    "Error in line " + (currentLine - 1)
+                            + ". generateFile: two parameters (content , file name) are expected");
+            System.exit(0);
+        }
+    }
+
+    private void print(ArrayList<Valor> parametros, int currentLine) {
+        if (parametros.size() == 1) {
+            if (parametros.get(0).tipo.equals("file")) {
+                try (BufferedReader lector = new BufferedReader(new FileReader(parametros.get(0).valor.toString()))) {
+                    String linea;
+
+                    // Leer el archivo línea por línea
+                    while ((linea = lector.readLine()) != null) {
+                        // Imprimir cada línea leída
+                        System.out.println(linea);
+                    }
+
+                } catch (IOException e) {
+                    // Manejar excepción en caso de error
+                    System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
+                }
+            } else {
+
+                System.out.println(parametros.get(0).valor);
+            }
+        } else {
+            System.out.println("Error in line " + (currentLine - 1) + ". print: Only one parameter is expected");
+            System.exit(0);
+        }
+    }
+
+    // Busca si existe la palabra en un archivo recibe palabra y nombre del archivo
+    private void search(ArrayList<Valor> parametros, int currentLine) {
+        if (parametros.size() == 2) {
+            if (parametros.get(1).tipo.equals("file")) {
+                if (!parametros.get(0).tipo.equals("string")) {
+                    System.out.println("Error in line " + (currentLine - 1)
+                            + ". seatch:  content needs to be a string type ");
+                    System.exit(0);
+                }
+
+                try (Scanner scanner = new Scanner(new File(parametros.get(1).valor.toString()))) {
+                    boolean encontrado = false;
+                    while (scanner.hasNextLine()) {
+                        String linea = scanner.nextLine();
+                        if (linea.contains(parametros.get(0).valor.toString())) {
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    if (encontrado) {
+                        System.out.println("La cadena fue encontrada en el archivo.");
+                    } else {
+                        System.out.println("La cadena no fue encontrada en el archivo.");
+                    }
+                } catch (FileNotFoundException e) {
+                    System.out.println("El archivo no existe.");
+                }
+            } else {
+                System.out.println(
+                        "Error in line " + (currentLine - 1)
+                                + ". search:  file needs to be a file type");
+                System.exit(0);
+            }
+        } else {
+            System.out.println("Error in line " + (currentLine - 1)
+                    + ". search: two parameters (content , file) are expected");
+            System.exit(0);
+        }
     }
 }
