@@ -118,13 +118,17 @@ public class AnalisisSintactico {
                 }
 
             } else {
+                System.out.println("De aquí salta el error");
+
                 error("(");
             }
         } else if (currentToken == "ctrl flujo") {
             nextToken();
             if (currentToken == "(") {
                 nextToken();
-                ArrayList<Valor> parametros = Parametros();
+                // ArrayList<Valor> parametros = Parametros();
+                Valor resultadoCondicion = Validacion();
+
                 if (currentToken == ")") {
                     nextToken();
                     if (currentToken == "{") {
@@ -133,7 +137,13 @@ public class AnalisisSintactico {
                         keys.push(currentToken);
                         nextToken();
 
-                        Codigo();
+                        // Si la condición del if es verdadero o falso
+                        if (resultadoCondicionEsVerdadera(resultadoCondicion)) {
+                            Codigo();
+                        } else {
+                            saltarBloque();
+                        }
+
                         if (currentToken == "}") {
                             // System.out.println(currentToken);
                             keys.pop();
@@ -141,7 +151,31 @@ public class AnalisisSintactico {
                             // System.out.println("sentencia aceptada");
                             nextToken();
 
-                            Codigo();
+                            if (currentTokVal.equals("else")) {
+                                nextToken();
+                                if (currentToken.equals("{")) {
+                                    keys.push(currentToken);
+                                    nextToken();
+
+                                    // Si la condición anterior fue falsa
+                                    if (!resultadoCondicionEsVerdadera(resultadoCondicion)) {
+                                        Codigo(); // Ejecuta el bloque de código del else
+                                    } else {
+                                        saltarBloque(); // Si la condición del if fue verdadera, saltamos el else
+                                    }
+
+                                    if (currentToken.equals("}")) {
+                                        keys.pop();
+                                        nextToken();
+                                    } else {
+                                        error("} before else");
+                                    }
+                                } else {
+                                    error("{ after else");
+                                }
+                            }
+
+                            // Codigo();
                             // prevToken();
                             // System.out.println("CUR" + currentToken);
                         } else {
@@ -281,6 +315,29 @@ public class AnalisisSintactico {
             error("Comparation operator");
         }
         return null;
+    }
+
+    private boolean resultadoCondicionEsVerdadera(Valor resultadoCondicion) {
+        return resultadoCondicion.tipo.equals("boolean") && (boolean) resultadoCondicion.valor;
+    }
+
+    public void saltarBloque() {
+        int contadorLlaves = 1;
+
+        while (contadorLlaves > 0 && currentToken != null) {
+            nextToken();
+            if (currentToken.equals("{")) {
+                contadorLlaves++;
+            }
+
+            else if (currentToken.equals("}")) {
+                contadorLlaves--;
+            }
+        }
+
+        if (contadorLlaves != 0) {
+            error("Missing closing brace ");
+        }
     }
 
     public void error(String tipo) {
