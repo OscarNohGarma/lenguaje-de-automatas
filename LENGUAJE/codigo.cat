@@ -27,6 +27,3 @@ if ( variable1 == 1233  ) {
     string frase = "Se ejecuto el else" ;
     print ( frase ) ;
 }
-
-print ( "Esto se ejecuta despues del if" ) ; 
- 

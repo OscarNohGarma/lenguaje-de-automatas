@@ -3,7 +3,7 @@ package lenguaje;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class AnalisisSintactico {
+public class AnalisisSintacticoErrores {
 
     private ArrayList<Token> tokens;
     private String currentToken;
@@ -11,10 +11,8 @@ public class AnalisisSintactico {
     private int contador;
     private int currentLine;
     private Stack<String> keys;
-    private AnalisisSemantico analizadorSemantico;
-    private Valor valor;
 
-    public AnalisisSintactico(ArrayList<Token> tokens) {
+    public AnalisisSintacticoErrores(ArrayList<Token> tokens) {
         this.tokens = tokens;
         // currentToken = tokens.get(contador).getTipo();
         currentToken = tokens.get(contador).getTipo();
@@ -22,8 +20,6 @@ public class AnalisisSintactico {
         keys = new Stack<>();
         contador = 0;
         currentLine = 1;
-        this.analizadorSemantico = new AnalisisSemantico();
-        this.valor = new Valor("", "");
     }
 
     public ArrayList<Token> getTokens() {
@@ -73,18 +69,12 @@ public class AnalisisSintactico {
     public void Sentencia() {
         // System.out.println(currentToken);
         if (currentToken == "tipo") {
-            String tipo = currentTokVal;
             nextToken();
             if (currentToken == "id") {
-                String id = currentTokVal;
                 nextToken();
                 if (currentToken == "=") {
                     nextToken();
-                    // String valor = currentTokVal;
-                    this.valor = Valor();
-
-                    analizadorSemantico.verificarDeclaracion(id, tipo);
-                    analizadorSemantico.verificarAsignacion(id, this.valor);
+                    Valor();
                     if (currentToken == ";") {
                         // System.out.println("sentencia aceptada");
                         nextToken();
@@ -99,16 +89,14 @@ public class AnalisisSintactico {
             }
 
         } else if (currentToken == "reservada") {
-            String resEval = currentTokVal;
             nextToken();
             if (currentToken == "(") {
                 nextToken();
-                ArrayList<Valor> parametros = Parametros();
+                Parametros();
                 if (currentToken == ")") {
                     nextToken();
                     if (currentToken == ";") {
                         // System.out.println("sentencia aceptada");
-                        analizadorSemantico.ejecutarReservada(resEval, parametros, currentLine);
                         nextToken();
                     } else {
                         error(";");
@@ -118,16 +106,13 @@ public class AnalisisSintactico {
                 }
 
             } else {
-
                 error("(");
             }
         } else if (currentToken == "ctrl flujo") {
             nextToken();
             if (currentToken == "(") {
                 nextToken();
-                // ArrayList<Valor> parametros = Parametros();
-                Valor resultadoCondicion = Validacion();
-
+                Parametros();
                 if (currentToken == ")") {
                     nextToken();
                     if (currentToken == "{") {
@@ -135,21 +120,10 @@ public class AnalisisSintactico {
                         // System.out.println("PUSH");
                         keys.push(currentToken);
                         nextToken();
-                        analizadorSemantico.abrirAmbito();
 
-                        verificarBloque();
-
-                        // Si la condición del if es verdadero o falso
-                        if (resultadoCondicionEsVerdadera(resultadoCondicion)) {
-                            Codigo();
-                        } else {
-                            saltarBloque();
-                        }
-
-                        analizadorSemantico.cerrarAmbito();
+                        Codigo();
 
                         if (currentToken == "}") {
-                            // System.out.println(currentToken);
                             keys.pop();
                             // System.out.println("POP");
                             // System.out.println("sentencia aceptada");
@@ -161,32 +135,20 @@ public class AnalisisSintactico {
                                     keys.push(currentToken);
                                     nextToken();
 
-                                    analizadorSemantico.abrirAmbito();
-
-                                    // Si la condición anterior fue falsa
-                                    if (!resultadoCondicionEsVerdadera(resultadoCondicion)) {
-
-                                        Codigo(); // Ejecuta el bloque de código del else
-                                    } else {
-                                        saltarBloque(); // Si la condición del if fue verdadera, saltamos el else
-                                    }
-
-                                    analizadorSemantico.cerrarAmbito();
+                                    Codigo();
 
                                     if (currentToken.equals("}")) {
                                         keys.pop();
                                         nextToken();
                                     } else {
+
                                         error("} before else");
                                     }
                                 } else {
                                     error("{ after else");
                                 }
-                            }
 
-                            // Codigo();
-                            // prevToken();
-                            // System.out.println("CUR" + currentToken);
+                            }
                         } else {
                             // currentLine++;
                             error("Uncomplete flow control structure, } ");
@@ -201,35 +163,35 @@ public class AnalisisSintactico {
             } else {
                 error("(");
             }
-        } else {
+        } else
+
+        {
             if (currentToken != "}" && currentToken != "FIN") {
                 error("Datatype, reserved word or flow control");
             }
         }
     }
 
-    public Valor Valor() {
-        String lexema = currentTokVal;
+    public void Valor() {
 
         if (currentToken == "numero") {
             nextToken();
-            return analizadorSemantico.verificarValor(lexema);
+            return;
         } else if (currentToken == "booleano") {
             nextToken();
-            return analizadorSemantico.verificarValor(lexema);
+            return;
         } else if (currentToken == "id") {
             nextToken();
-            return analizadorSemantico.verificarValor(lexema);
+            return;
         } else if (currentToken == "read") {
             nextToken();
             if (currentToken == "(") {
                 nextToken();
                 if (currentToken == "cadena") {
-                    String cadena = currentTokVal;
                     nextToken();
                     if (currentToken == ")") {
                         nextToken();
-                        return analizadorSemantico.procesarRead(cadena);
+                        return;
                     } else {
                         error(")");
                     }
@@ -240,117 +202,66 @@ public class AnalisisSintactico {
                 error("(");
             }
         } else if (currentToken == "cadena") {
-            Valor mensajeValor = Mensaje();
-
-            return new Valor(mensajeValor.tipo, mensajeValor.valor);
+            Mensaje();
+            return;
         }
         error("Valid data type");
-        return null;
-
     }
 
-    public Valor Mensaje() {
-        String mensajeCompleto = "";
+    public void Mensaje() {
 
         if (currentToken == "cadena") {
-            mensajeCompleto = currentTokVal.substring(1, currentTokVal.length() - 1);
-            ;
             nextToken();
         }
-
-        while (currentToken == "+") {
+        if (currentToken == "+") {
             nextToken();
             if (currentToken == "cadena") {
-                mensajeCompleto += currentTokVal.substring(1, currentTokVal.length() - 1);
-                nextToken();
+                Mensaje();
             } else {
-                error("Expected string after '+'");
+                error("String");
             }
         }
-        return new Valor("string", mensajeCompleto);
     }
 
-    public ArrayList<Valor> Parametros() {
-        ArrayList<Valor> parametros = new ArrayList<>();
-        Valor val1 = Valor();
-        parametros.add(val1);
-        // System.out.println(val.valor);
-        // System.out.println(val.tipo);
+    public void Parametros() {
+        Valor();
         if (currentToken == ")") {
-            return parametros;
+            return;
         }
         if (currentToken == ",") {
             nextToken();
-            Valor val2 = Valor();
-            parametros.add(val2);
-            return parametros;
+            Valor();
+            return;
         }
         prevToken();
-        parametros.clear();
-        parametros.add(Validacion());
-
-        return parametros;
+        Validacion();
 
     }
 
-    public Valor Validacion() {
-        Valor C = Condicion();
+    public void Validacion() {
+        Condicion();
 
         if (currentToken == ")") {
-            return C;
+            return;
 
         } else if (currentToken == "op logico") {
-            String opL = currentTokVal;
             nextToken();
-            Valor vali = Validacion();
-            return analizadorSemantico.validacion(C, vali, opL);
-
+            Validacion();
         } else {
             error("Logical operator");
         }
         // System.out.println(currentToken);
-        return null;
 
     }
 
-    public Valor Condicion() {
-        Valor v1 = Valor();
+    public void Condicion() {
+        Valor();
         if (currentToken == "op comp") {
-            String opC = currentTokVal;
             nextToken();
-            Valor v2 = Valor();
-            return analizadorSemantico.comparacion(v1, v2, opC);
+            Valor();
         } else {
             error("Comparation operator");
         }
-        return null;
-    }
-
-    private boolean resultadoCondicionEsVerdadera(Valor resultadoCondicion) {
-        return resultadoCondicion.tipo.equals("boolean") && (boolean) resultadoCondicion.valor;
-    }
-
-    public void saltarBloque() {
-        int contadorLlaves = 1;
-
-        while (contadorLlaves > 0 && currentToken != null) {
-            nextToken();
-            if (currentToken.equals("{")) {
-                contadorLlaves++;
-            }
-
-            else if (currentToken.equals("}")) {
-                contadorLlaves--;
-            }
-        }
-
-        if (contadorLlaves != 0) {
-            error("Missing closing brace ");
-        }
-    }
-
-    public void verificarBloque() {
-
     }
 
     public void error(String tipo) {

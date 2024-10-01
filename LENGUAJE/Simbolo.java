@@ -17,6 +17,11 @@ public class Simbolo {
         this.valor = null;
     }
 
+    public Simbolo(String tipo, Object valor) {
+        this.tipo = tipo;
+        this.valor = valor;
+    }
+
     public String getId() {
         return id;
     }

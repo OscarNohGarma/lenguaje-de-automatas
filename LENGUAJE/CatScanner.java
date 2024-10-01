@@ -472,9 +472,11 @@ class MainCat {
         CatScanner cs = new CatScanner(file);
         cs.leerSimbolos();
         boolean val = cs.validarTokens();
+        AnalisisSintacticoErrores erroresSintacticos = new AnalisisSintacticoErrores(cs.getTokens());
         AnalisisSintactico as = new AnalisisSintactico(cs.getTokens());
 
         if (val) {
+            erroresSintacticos.Codigo();
             as.Codigo();
             System.out.println("\nSuccessfully compiled.\n");
 

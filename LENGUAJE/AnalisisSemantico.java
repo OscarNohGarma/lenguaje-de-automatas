@@ -10,41 +10,50 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class AnalisisSemantico {
-    private Map<String, Simbolo> tablaSimbolos;
+    private Stack<Map<String, Simbolo>> pilaDeTablasSimbolos;
 
     public AnalisisSemantico() {
-        this.tablaSimbolos = new HashMap<>();
+        this.pilaDeTablasSimbolos = new Stack<>();
+        this.pilaDeTablasSimbolos.push(new HashMap<>());
     }
 
     // <sentencia> → tipo id = <valor> ;
     // id.tipo = add(tipo.tipo, id.lex)
     public void verificarDeclaracion(String id, String tipo) {
-        if (tablaSimbolos.containsKey(id)) {
-            System.out.println("Error: Variable " + id + " ya fue declarada.");
-            System.exit(0);
-        } else {
-            Simbolo simbolo = new Simbolo(id, tipo);
-            tablaSimbolos.put(id, simbolo);
+        for (Map<String, Simbolo> tabla : pilaDeTablasSimbolos) {
+            if (tabla.containsKey(id)) {
+                System.out.println("Error: Variable " + id + " ya fue declarada.");
+                System.exit(0);
+            }
         }
+
+        Simbolo simbolo = new Simbolo(id, tipo);
+        pilaDeTablasSimbolos.peek().put(id, simbolo);
     }
 
     // <sentencia> → tipo id = <valor> ;
     // Si id.tipo == <valor>.tipo entonces id.valor = <valor>.valor
     public void verificarAsignacion(String id, Valor valor) {
-        if (!tablaSimbolos.containsKey(id)) {
+        Simbolo simbolo = null;
+        for (Map<String, Simbolo> tabla : pilaDeTablasSimbolos) {
+            if (tabla.containsKey(id)) {
+                simbolo = tabla.get(id);
+                break;
+            }
+        }
+
+        if (simbolo == null) {
             System.out.println("Error: Variable " + id + " no ha sido declarada.");
             System.exit(0);
             return;
         }
 
-        Simbolo simbolo = tablaSimbolos.get(id);
-
-        // Si id.tipo == <valor>.tipo
+        // Si los tipos coinciden
         if (simbolo.getTipo().equals(valor.tipo)) {
             simbolo.setValor(valor.valor);
-
         } else {
             System.out.println("Error: Tipo de dato incompatible. Se esperaba " + simbolo.getTipo()
                     + " pero se recibió " + valor.tipo);
@@ -59,6 +68,7 @@ public class AnalisisSemantico {
 
         String tipo;
         Object valor;
+
         if (lexema.matches("-?\\d+")) {
             tipo = "int";
             valor = Integer.parseInt(lexema);
@@ -68,31 +78,27 @@ public class AnalisisSemantico {
             tipo = "boolean";
             valor = Boolean.parseBoolean(lexema);
             return new Valor(tipo, valor);
+
         } else if (lexema.startsWith("\"") && lexema.endsWith("\"")) {
             tipo = "string";
             valor = lexema.substring(1, lexema.length() - 1);
-        } else if (tablaSimbolos.containsKey(lexema)) {
-            Simbolo simbolo = tablaSimbolos.get(lexema);
-            return new Valor(simbolo.tipo, simbolo.valor);
-        } else {
-            System.out.println("Error: Variable no declarada o tipo de dato desconocido para el lexema: " + lexema);
-            System.exit(0);
-            return null;
-        }
-
-        if (tablaSimbolos.containsKey(lexema)) {
-            Simbolo simbolo = tablaSimbolos.get(lexema);
-            if (!simbolo.tipo.equals(tipo)) {
-                System.out.println("Tipo de dato no coincidente para " + lexema);
-                System.exit(0);
-                return null;
-            }
-            return new Valor(simbolo.tipo, simbolo.valor);
-        } else {
-            Simbolo nuevoSimbolo = new Simbolo(lexema, tipo, valor);
-            tablaSimbolos.put(lexema, nuevoSimbolo);
             return new Valor(tipo, valor);
         }
+
+        // Busca el lexema en la pila de tablas de símbolos De acuerdo a los ambitos
+        for (int i = pilaDeTablasSimbolos.size() - 1; i >= 0; i--) {
+            Map<String, Simbolo> tablaSimbolosActual = pilaDeTablasSimbolos.get(i);
+
+            if (tablaSimbolosActual.containsKey(lexema)) {
+                Simbolo simbolo = tablaSimbolosActual.get(lexema);
+                return new Valor(simbolo.tipo, simbolo.valor);
+            }
+        }
+
+        // Si no se encuentra el lexema
+        System.out.println("Error: Variable no declarada o tipo de dato desconocido para el lexema: " + lexema);
+        System.exit(0);
+        return null;
     }
 
     // <valor> → read ( cadena )
@@ -121,7 +127,6 @@ public class AnalisisSemantico {
     }
 
     // <validacion> -> <comparacion> opL <coparacion>
-
     public Valor validacion(Valor C, Valor Vali, String opL) {
 
         if (opL.equals("and")) {
@@ -279,4 +284,13 @@ public class AnalisisSemantico {
             System.exit(0);
         }
     }
+
+    public void abrirAmbito() {
+        pilaDeTablasSimbolos.push(new HashMap<>());
+    }
+
+    public void cerrarAmbito() {
+        pilaDeTablasSimbolos.pop();
+    }
+
 }
