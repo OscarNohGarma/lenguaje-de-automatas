@@ -1,8 +1,4 @@
-string variable2 = "1233" + "3" + "w" + "xd" ;
-int variable1 = 1233 ;
-int var1v2 = variable1 ;
-print ( variable2  ) ;
-boolean variable3 = true ;
-file archivoEx = read (  "archivo.txt" ) ;
-print (  2 == 2 and variable1 == 1233 ) ;
-generateFile ( "Ejemplo de texto" , "archivo.txt" )
+// def variable2 , string
+// t1 = "1233" + " primero"
+// t2 = t1 + "w"
+// t3 = t2 + "xd"

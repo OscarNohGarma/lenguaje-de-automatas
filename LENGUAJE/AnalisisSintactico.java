@@ -251,22 +251,34 @@ public class AnalisisSintactico {
 
     public Valor Mensaje() {
         String mensajeCompleto = "";
+        StringBuffer codigo = new StringBuffer();
+        String cadenaLugar = "";
+        String Mplugar = "";
+        String Mlugar = "";
 
         if (currentToken == "cadena") {
             mensajeCompleto = currentTokVal.substring(1, currentTokVal.length() - 1);
-            ;
+            cadenaLugar = '"' + mensajeCompleto + '"';
+            Mlugar = Mplugar = cadenaLugar;
             nextToken();
         }
-
+        GenCodIntermedio gci = new GenCodIntermedio();
         while (currentToken == "+") {
             nextToken();
             if (currentToken == "cadena") {
+                Mplugar = gci.newTemporal();
                 mensajeCompleto += currentTokVal.substring(1, currentTokVal.length() - 1);
+                cadenaLugar = '"' + currentTokVal.substring(1, currentTokVal.length() - 1) + '"';
+                codigo.append(Mplugar + "=" + Mlugar + "+" + cadenaLugar + "\n");
+                Mlugar = Mplugar;
                 nextToken();
             } else {
                 error("Expected string after '+'");
             }
         }
+        System.out.println("codigo: \n" + codigo);
+        System.out.println("lugar: " + Mplugar);
+
         return new Valor("string", mensajeCompleto);
     }
 
