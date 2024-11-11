@@ -477,7 +477,8 @@ class MainCat {
 
         if (val) {
             erroresSintacticos.Codigo();
-            as.Codigo();
+            String codigo = as.Codigo();
+            System.out.println(codigo);
             System.out.println("\nSuccessfully compiled.\n");
 
             // System.out.println("+-------------Tabla de símbolos-------------+");

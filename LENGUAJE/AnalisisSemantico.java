@@ -27,28 +27,20 @@ public class AnalisisSemantico {
     public String procesarSentenciaTipoIdAsignacion(String idLugar, String tipo, String valorCodigo,
             String valorLugar) {
         StringBuilder intermediateCodeSen = new StringBuilder();
-        intermediateCodeSen.append(valorCodigo);
+        // intermediateCodeSen.append(valorCodigo);
 
         // Generación de código para la definición y asignación
-        if (valorCodigo.equals("")) {
-            String codigo = "\ndef " + idLugar + ", " + tipo + "\n" + idLugar + " = " + valorLugar;
-            intermediateCodeSen.append(codigo);
-        } else {
-            String codigo = "\ndef " + idLugar + ", " + tipo + "\n" + valorCodigo + "\n" + idLugar + " = " + valorLugar;
-            intermediateCodeSen.append(codigo);
-        }
+
+        String codigo = "\ndef " + idLugar + ", " + tipo + "\n" + valorCodigo + idLugar + " = " + valorLugar;
+        intermediateCodeSen.append(codigo);
         return intermediateCodeSen.toString();
     }
 
-    public String ejecutarCtrlFlujo(String pLugar, String cCodigo, int numTemporal) {
+    public String ejecutarCtrlFlujo(String pCodigo, String pLugar, String cCodigoV, String cCodigoF) {
         StringBuilder intermediateCodeCtrl = new StringBuilder();
-        String sLugar = "t" + numTemporal;
-        numTemporal++;
+        intermediateCodeCtrl.append(pCodigo);
 
-        sLugar = sLugar + pLugar;
-
-        intermediateCodeCtrl.append(sLugar);
-        String code = "\nif_true " + sLugar + " C \nsalto else \netiq C: \n" + cCodigo + "\netiq else;";
+        String code = "if_true " + pLugar + " C \nsalto else \netiq C: \n" + cCodigoV + "\netiq else:\n" + cCodigoF;
         intermediateCodeCtrl.append(code);
 
         return intermediateCodeCtrl.toString();
@@ -242,7 +234,7 @@ public class AnalisisSemantico {
         // System.out.println("Evalacuión: " + resEval);
         StringBuilder intermediateCodeReser = new StringBuilder();
         int numParametros = parametros.size();
-        String codigo = codigoParametros + "\ncall " + resEval + " " + numParametros + "\n";
+        String codigo = "\n" + codigoParametros + "call " + resEval + " " + numParametros + "\n";
         intermediateCodeReser.append(codigo);
 
         switch (resEval) {

@@ -1,13 +1,4 @@
-string var1 = "1233" + " primero " + "w" + "xd" ;
-int var2 = 1233 ;
-string var3 = var1 ;
-boolean var4 = true ;
-
-print ( "1233" + " primero " + "w" + "xd" ) ;
-
-generateFile ( var1 , "archivo.txt" + "x" ) ;
-
-if ( "x" + "x" == var2 or "xc" == "x" + "c" ) {
+if ( 1 == 2 ) {
     string frase = "Se ejecuto el if" ;
     print ( frase ) ;
 } else {

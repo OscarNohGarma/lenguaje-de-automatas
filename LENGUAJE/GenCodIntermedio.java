@@ -14,4 +14,5 @@ public class GenCodIntermedio {
         temporalesStr.add("t" + (temporalesStr.size() + 1));
         return "t" + (temporalesStr.size());
     }
+
 }

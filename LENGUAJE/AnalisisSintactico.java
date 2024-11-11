@@ -14,6 +14,7 @@ public class AnalisisSintactico {
     private AnalisisSemantico analizadorSemantico;
     private CodigoLugarValor valor;
     GenCodIntermedio gci = new GenCodIntermedio();
+    private StringBuilder intermediateCode;
 
     public AnalisisSintactico(ArrayList<Token> tokens) {
         this.tokens = tokens;
@@ -25,6 +26,7 @@ public class AnalisisSintactico {
         currentLine = 1;
         this.analizadorSemantico = new AnalisisSemantico();
         this.valor = new CodigoLugarValor(new Valor("", ""), "", "");
+        intermediateCode = new StringBuilder();
     }
 
     public ArrayList<Token> getTokens() {
@@ -52,14 +54,17 @@ public class AnalisisSintactico {
         currentTokVal = tokens.get(contador).getValor();
     }
 
-    public void Codigo() {
+    public String Codigo() {
         try {
             while (true) {
                 // currentLine++;
-
-                Sentencia();
+                String code = Sentencia();
+                // Sentencia();
+                intermediateCode.append(code);
                 if (currentToken == "}" || currentToken == "FIN") {
+
                     break;
+
                 }
             }
             // // if (currentToken != " ") {
@@ -68,10 +73,11 @@ public class AnalisisSintactico {
         } catch (Exception e) {
 
         }
-
+        return intermediateCode.toString();
     }
 
-    public void Sentencia() {
+    public String Sentencia() {
+        StringBuilder code = new StringBuilder();
         // System.out.println(currentToken);
         if (currentToken == "tipo") {
             String tipo = currentTokVal;
@@ -91,6 +97,11 @@ public class AnalisisSintactico {
 
                     analizadorSemantico.verificarDeclaracion(id, tipo);
                     analizadorSemantico.verificarAsignacion(id, this.valor.getValor());
+                    String codigoAsignacion = analizadorSemantico.procesarSentenciaTipoIdAsignacion(id, tipo,
+                            valor.getCodigo(),
+                            valor.getLugar());
+
+                    intermediateCode.append(codigoAsignacion);
                     if (currentToken == ";") {
                         // System.out.println("sentencia aceptada");
                         nextToken();
@@ -122,7 +133,10 @@ public class AnalisisSintactico {
                         for (CodigoLugarValor codigoLugarValor : parametros.getParametros()) {
                             newParametros.add(codigoLugarValor.getValor());
                         }
-                        analizadorSemantico.ejecutarReservada(resEval, newParametros, currentLine, "");
+                        String codigoReservada = analizadorSemantico.ejecutarReservada(resEval, newParametros,
+                                currentLine,
+                                parametros.getCodigo());
+                        intermediateCode.append(codigoReservada);
                         nextToken();
                     } else {
                         error(";");
@@ -144,25 +158,39 @@ public class AnalisisSintactico {
                 // ! mismo, corresponde a la produccion P -> Valid
                 // ! Es decir, obtienes P.codigo, y P.lugar y los guardas en resultadoCondicion
                 CodigoLugarValor resultadoCondicion = Validacion();
-                // ? System.out.println(resultadoCondicion.getCodigo());
-                // ? System.out.println(resultadoCondicion.getLugar());
+                // ? System.out.println("Codigo de resultado condición " +
+                // resultadoCondicion.getCodigo());
+                // ? System.out.println("Lugar de resultado condición " +
+                // resultadoCondicion.getLugar());
 
                 if (currentToken == ")") {
                     nextToken();
                     if (currentToken == "{") {
+                        String cCodigoV, cCodigoF;
                         // System.out.println(currentToken);
                         // System.out.println("PUSH");
                         keys.push(currentToken);
                         nextToken();
                         analizadorSemantico.abrirAmbito();
 
-                        verificarBloque();
+                        int startLength = intermediateCode.length();
+
                         // Si la condición del if es verdadero o falso
-                        if (resultadoCondicionEsVerdadera(resultadoCondicion.getValor())) {
-                            Codigo();
-                        } else {
-                            saltarBloque();
-                        }
+                        // if (resultadoCondicionEsVerdadera(resultadoCondicion.getValor())) {
+                        Codigo();
+
+                        cCodigoV = intermediateCode.substring(startLength);
+                        intermediateCode.setLength(startLength);
+
+                        // String codigoCtrl =
+                        // analizadorSemantico.ejecutarCtrlFlujo(resultadoCondicion.getCodigo(),
+                        // resultadoCondicion.getLugar(), codigoGeneradoIf);
+
+                        // intermediateCode.append(codigoCtrl);
+
+                        // } else {
+                        // saltarBloque();
+                        // }
 
                         analizadorSemantico.cerrarAmbito();
 
@@ -182,12 +210,26 @@ public class AnalisisSintactico {
                                     analizadorSemantico.abrirAmbito();
 
                                     // Si la condición anterior fue falsa
-                                    if (!resultadoCondicionEsVerdadera(resultadoCondicion.getValor())) {
+                                    // if (!resultadoCondicionEsVerdadera(resultadoCondicion.getValor())) {
 
-                                        Codigo(); // Ejecuta el bloque de código del else
-                                    } else {
-                                        saltarBloque(); // Si la condición del if fue verdadera, saltamos el else
-                                    }
+                                    Codigo(); // Ejecuta el bloque de código del else
+
+                                    cCodigoF = intermediateCode.substring(startLength);
+                                    intermediateCode.setLength(startLength);
+
+                                    // String codigoCtrl = analizadorSemantico.ejecutarCtrlFlujo(
+                                    // resultadoCondicion.getCodigo(),
+                                    // resultadoCondicion.getLugar(), codigoGeneradoIf);
+
+                                    // intermediateCode.append(codigoCtrl);
+
+                                    String codigoCtrl = analizadorSemantico.ejecutarCtrlFlujo(
+                                            resultadoCondicion.getCodigo(),
+                                            resultadoCondicion.getLugar(), cCodigoV, cCodigoF);
+                                    intermediateCode.append(codigoCtrl);
+                                    // } else {
+                                    // saltarBloque(); // Si la condición del if fue verdadera, saltamos el else
+                                    // }
 
                                     analizadorSemantico.cerrarAmbito();
 
@@ -224,6 +266,8 @@ public class AnalisisSintactico {
                 error("Datatype, reserved word or flow control");
             }
         }
+        return code.toString();
+
     }
 
     // V => id | num | bool | etc
