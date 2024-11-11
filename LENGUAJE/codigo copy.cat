@@ -1,17 +1,35 @@
+string variable2 = "1233" + " primero " + "w" + "xd" ;
 int variable1 = 1233 ;
 int var1v2 = variable1 ;
 boolean variable3 = true ;
+
+print ( variable2  ) ;
+print ( " " ) ;
+
+generateFile ( variable2 , "archivo.txt" ) ;
+generateFile ( "Este es un segundo archivo - MODIFICADO 2" , "archivo2.txt" ) ;
+print ( " " ) ;
+
 file archivoEx = read (  "archivo.txt" ) ;
 
-string variable2 = "1233" + "3" + "w" + "xd" ;
-print ( 3 == 3  and "hola" == "hola" or "hola" == "hola" ) ;
-if ( variable == 1233 ) { 
-    file archivo1 = read ( "archivo.txt" ) ;
-    print ( "homundo" ) ;
-    print ( "homundo" ) ;
-    print ( "example cadena xd" ) ;
-    print ( archivoEx ) ;
-    generateFile ( variable2 , "nombre.txt" ) ;
+print ( archivoEx ) ;
+print ( read (  "archivo2.txt" ) ) ;
+print ( " " ) ;
+
+print (  2 == variable3 and variable1 == 1233 ) ;
+
+search ( "primero" ,  archivoEx ) ;
+
+if ( variable1 == 1233  and 5 == 3 or 3 == 4 ) {
+    string frase = "Se ejecuto el if" ;
+    print ( frase ) ;
+} else {
+    string frase = "Se ejecuto el else" ;
+    print ( frase ) ;
 }
-int x = true ; 
-int num = 2 ;
+
+if ( variable1 == 1233  ) {
+} else {
+    string frase = "Se ejecuto el else" ;
+    print ( frase ) ;
+}
