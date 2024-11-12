@@ -1,6 +1,7 @@
 package lenguaje;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class AnalisisSintactico {
@@ -171,23 +172,28 @@ public class AnalisisSintactico {
                         // System.out.println("PUSH");
                         keys.push(currentToken);
                         nextToken();
+                        ArrayList<Token> remainingTokens = new ArrayList<>(tokens.subList(contador, tokens.size()));
+
+                        AnalisisSintacticoErrores ase = new AnalisisSintacticoErrores(remainingTokens);
+
                         analizadorSemantico.abrirAmbito();
 
                         int startLength = intermediateCode.length();
 
                         // Si la condición del if es verdadero o falso
+                        // ! Valida que la condición del if sea verdadera y se ejecuta el bloque
+                        // Verdadero
                         // if (resultadoCondicionEsVerdadera(resultadoCondicion.getValor())) {
                         Codigo();
 
                         cCodigoV = intermediateCode.substring(startLength);
                         intermediateCode.setLength(startLength);
-
                         // String codigoCtrl =
                         // analizadorSemantico.ejecutarCtrlFlujo(resultadoCondicion.getCodigo(),
                         // resultadoCondicion.getLugar(), codigoGeneradoIf);
 
                         // intermediateCode.append(codigoCtrl);
-
+                        // !Cierre del bloque Verdadero
                         // } else {
                         // saltarBloque();
                         // }
@@ -210,6 +216,7 @@ public class AnalisisSintactico {
                                     analizadorSemantico.abrirAmbito();
 
                                     // Si la condición anterior fue falsa
+                                    // ! Verifica que la condición sea falsa y ejecuta el bloque Falso (else)
                                     // if (!resultadoCondicionEsVerdadera(resultadoCondicion.getValor())) {
 
                                     Codigo(); // Ejecuta el bloque de código del else
@@ -227,6 +234,8 @@ public class AnalisisSintactico {
                                             resultadoCondicion.getCodigo(),
                                             resultadoCondicion.getLugar(), cCodigoV, cCodigoF);
                                     intermediateCode.append(codigoCtrl);
+
+                                    // ! Cierre del bloque falso
                                     // } else {
                                     // saltarBloque(); // Si la condición del if fue verdadera, saltamos el else
                                     // }
@@ -242,7 +251,17 @@ public class AnalisisSintactico {
                                 } else {
                                     error("{ after else");
                                 }
+
                             }
+
+                            // String codigoCtrl = analizadorSemantico.ejecutarCtrlFlujo(
+                            // resultadoCondicion.getCodigo(),
+                            // resultadoCondicion.getLugar(), cCodigoV, cCodigoF);
+                            // intermediateCode.append(codigoCtrl);
+
+                            String codigoIfElse = ase.ifElse(resultadoCondicion.getCodigo(),
+                                    resultadoCondicion.getLugar());
+                            System.out.println(codigoIfElse);
 
                             // Codigo();
                             // prevToken();
@@ -307,6 +326,9 @@ public class AnalisisSintactico {
 
                         Valor newValor = analizadorSemantico.procesarRead(cadena);
                         // ? REVISAR ----------V
+                        String temporal = gci.newTemporal();
+                        String codigoRead = analizadorSemantico.procesarReadInt(temporal, cadena);
+                        intermediateCode.append(codigoRead);
                         return new CodigoLugarValor(newValor, "", cadena);
                     } else {
                         error(")");
@@ -494,7 +516,41 @@ public class AnalisisSintactico {
         }
     }
 
-    public void verificarBloque() {
+    public String codigoIf(ArrayList<Token> tokens) {
+        Codigo();
+        if (currentToken == "}") {
+            // keys.pop();
+            // System.out.println("POP");
+            // System.out.println("sentencia aceptada");
+            System.out.println("Antes de entrar al if" + currentTokVal);
+            nextToken();
+
+            if (currentTokVal.equals("else")) {
+                nextToken();
+                if (currentToken.equals("{")) {
+                    keys.push(currentToken);
+                    nextToken();
+                    System.out.println("En el else" + currentTokVal);
+                    Codigo();
+
+                    if (currentToken.equals("}")) {
+                        keys.pop();
+                        nextToken();
+                    } else {
+
+                        error("} before else");
+                    }
+                } else {
+                    error("{ after else");
+                }
+
+            }
+        } else {
+            System.out.println("Aquí lanza el error");
+            // currentLine++;
+            error("Uncomplete flow control structure, } ");
+        }
+        return "Lo recorrio todo";
 
     }
 

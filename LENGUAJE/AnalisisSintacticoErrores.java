@@ -270,4 +270,46 @@ public class AnalisisSintacticoErrores {
         System.out.println("'" + currentTokVal + "'. " + tipo + " is expected.");
         System.exit(0);
     }
+
+    public String ifElse(String pCodigo, String pLugar) {
+        StringBuilder intermediateCode = new StringBuilder();
+        Codigo();
+        if (currentToken.equals("}")) {
+            // keys.pop();
+            // System.out.println("POP");
+            // System.out.println("sentencia aceptada");
+            nextToken();
+
+            if (currentTokVal.equals("else")) {
+                nextToken();
+                if (currentToken.equals("{")) {
+                    keys.push(currentToken);
+                    nextToken();
+                    Codigo();
+
+                    if (currentToken.equals("}")) {
+                        keys.pop();
+                        nextToken();
+                    } else {
+
+                        error("} before else");
+                    }
+                } else {
+                    error("{ after else");
+                }
+
+            }
+        } else {
+            // currentLine++;
+            error("Uncomplete flow control structure, } ");
+        }
+
+        // String codigoCtrl = analizadorSemantico.ejecutarCtrlFlujo(
+        // pCodigo,
+        // pLugar, cCodigoV, cCodigoF);
+        // intermediateCode.append(codigoCtrl);
+
+        return intermediateCode.toString();
+
+    }
 }

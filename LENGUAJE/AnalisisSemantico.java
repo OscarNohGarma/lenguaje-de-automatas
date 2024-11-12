@@ -38,12 +38,51 @@ public class AnalisisSemantico {
 
     public String ejecutarCtrlFlujo(String pCodigo, String pLugar, String cCodigoV, String cCodigoF) {
         StringBuilder intermediateCodeCtrl = new StringBuilder();
-        intermediateCodeCtrl.append(pCodigo);
+        intermediateCodeCtrl.append("\n" + pCodigo);
 
         String code = "if_true " + pLugar + " C \nsalto else \netiq C: \n" + cCodigoV + "\netiq else:\n" + cCodigoF;
         intermediateCodeCtrl.append(code);
 
         return intermediateCodeCtrl.toString();
+    }
+
+    public String procesarReadInt(String temporal, String cadena) {
+        StringBuilder intermediateCodeRead = new StringBuilder();
+
+        String codigo = "\nparam " + cadena + "\n" + temporal + " = call read 1";
+        intermediateCodeRead.append(codigo);
+
+        return intermediateCodeRead.toString();
+    }
+
+    // <valor> → read ( cadena )
+    // Si cadena.tipo == 'String' entonces cadena.valor = table(cadena.valor,
+    // cadena.lex) <valor>.tipo = 'file';
+    public Valor procesarRead(String cadena) {
+
+        Valor valorCadena = verificarValor(cadena);
+
+        if (valorCadena != null && valorCadena.tipo.equals("string")) {
+            String nombreArchivo = (String) valorCadena.valor;
+            File archivo = new File("./" + nombreArchivo);
+
+            if (archivo.exists()) {
+
+                // Generamos el código intermedio para la llamada a read
+
+                // Retornamos el Valor con el tipo "file", el archivo, el lugar temporal y el
+                // código generado
+                return new Valor("file", archivo);
+            } else {
+                System.out.println("Error: El archivo " + nombreArchivo + " no existe.");
+                System.exit(0);
+                return null;
+            }
+        } else {
+            System.out.println("Error: Se esperaba una cadena para read, pero se recibió: " + cadena);
+            System.exit(0);
+            return null;
+        }
     }
 
     // <sentencia> → tipo id = <valor> ;
@@ -131,6 +170,48 @@ public class AnalisisSemantico {
         return null;
     }
 
+    public Valor soloValor(String lexema) {
+
+        String tipo;
+        Object valor;
+        String lugar;
+
+        if (lexema.matches("-?\\d+")) {
+            tipo = "int";
+            lugar = lexema;
+            valor = Integer.parseInt(lexema);
+            return new Valor(tipo, valor, lugar, "");
+
+        } else if (lexema.equals("true") || lexema.equals("false")) {
+            tipo = "boolean";
+            valor = Boolean.parseBoolean(lexema);
+            lugar = lexema;
+            return new Valor(tipo, valor, lexema, "");
+
+        } else if (lexema.startsWith("\"") && lexema.endsWith("\"")) {
+            tipo = "string";
+            valor = lexema.substring(1, lexema.length() - 1);
+            return new Valor(tipo, valor);
+        }
+
+        // Busca el lexema en la pila de tablas de símbolos De acuerdo a los ambitos
+        for (int i = pilaDeTablasSimbolos.size() - 1; i >= 0; i--) {
+            Map<String, Simbolo> tablaSimbolosActual = pilaDeTablasSimbolos.get(i);
+
+            if (tablaSimbolosActual.containsKey(lexema)) {
+                Simbolo simbolo = tablaSimbolosActual.get(lexema);
+                lugar = lexema;
+                return new Valor(simbolo.tipo, simbolo.valor, lugar, "");
+            }
+        }
+
+        // Si no se encuentra el lexema
+        // System.out.println("Error: Variable no declarada o tipo de dato desconocido
+        // para el lexema: " + lexema);
+        // System.exit(0);
+        return null;
+    }
+
     public String verificarMensaje(String lugar, String codigo) {
         StringBuilder intermediateCodeVM = new StringBuilder();
 
@@ -138,39 +219,6 @@ public class AnalisisSemantico {
         intermediateCodeVM.append(codigo);
 
         return intermediateCodeVM.toString();
-    }
-
-    // <valor> → read ( cadena )
-    // Si cadena.tipo == 'String' entonces cadena.valor = table(cadena.valor,
-    // cadena.lex) <valor>.tipo = 'file';
-    public Valor procesarRead(String cadena) {
-
-        Valor valorCadena = verificarValor(cadena);
-
-        if (valorCadena != null && valorCadena.tipo.equals("string")) {
-            String nombreArchivo = (String) valorCadena.valor;
-            File archivo = new File("./" + nombreArchivo);
-
-            if (archivo.exists()) {
-
-                String lugarTemporal = generarTemporal();
-
-                // Generamos el código intermedio para la llamada a read
-                String codigo = "\nparam " + cadena + "\n" + lugarTemporal + " = call read 1 \nret file";
-
-                // Retornamos el Valor con el tipo "file", el archivo, el lugar temporal y el
-                // código generado
-                return new Valor("file", archivo, lugarTemporal, codigo);
-            } else {
-                System.out.println("Error: El archivo " + nombreArchivo + " no existe.");
-                System.exit(0);
-                return null;
-            }
-        } else {
-            System.out.println("Error: Se esperaba una cadena para read, pero se recibió: " + cadena);
-            System.exit(0);
-            return null;
-        }
     }
 
     private String generarTemporal() {
@@ -256,6 +304,22 @@ public class AnalisisSemantico {
         // currentTokVal = tokens.get(contador).getValor();
     }
 
+    public String ejectutarCodeReservada(String resEval, ArrayList<Valor> parametros, int currentLine,
+            String codigoParametros) {
+
+        // contador = contador - 4;
+        // currentTokVal = tokens.get(contador).getValor();
+        // System.out.println("Evalacuión: " + resEval);
+        StringBuilder intermediateCodeReser = new StringBuilder();
+        int numParametros = parametros.size();
+        String codigo = "\n" + codigoParametros + "call " + resEval + " " + numParametros + "\n";
+        intermediateCodeReser.append(codigo);
+
+        return intermediateCodeReser.toString();
+        // contador = contador + 4;
+        // currentTokVal = tokens.get(contador).getValor();
+    }
+
     private void generateFile(ArrayList<Valor> parametros, int currentLine) {
 
         if (parametros.size() == 2) {
@@ -285,33 +349,29 @@ public class AnalisisSemantico {
     }
 
     private void print(ArrayList<Valor> parametros, int currentLine) {
-        /*
-         * if (parametros.size() == 1) {
-         * if (parametros.get(0).tipo.equals("file")) {
-         * try (BufferedReader lector = new BufferedReader(new
-         * FileReader(parametros.get(0).valor.toString()))) {
-         * String linea;
-         * 
-         * // Leer el archivo línea por línea
-         * while ((linea = lector.readLine()) != null) {
-         * // Imprimir cada línea leída
-         * System.out.println(linea);
-         * }
-         * 
-         * } catch (IOException e) {
-         * // Manejar excepción en caso de error
-         * System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
-         * }
-         * } else {
-         * 
-         * System.out.println(parametros.get(0).valor);
-         * }
-         * } else {
-         * System.out.println("Error in line " + (currentLine - 1) +
-         * ". print: Only one parameter is expected");
-         * System.exit(0);
-         * }
-         */
+        if (parametros.size() == 1) {
+            if (parametros.get(0).tipo.equals("file")) {
+                try (BufferedReader lector = new BufferedReader(new FileReader(parametros.get(0).valor.toString()))) {
+                    String linea;
+
+                    // Leer el archivo línea por línea
+                    while ((linea = lector.readLine()) != null) {
+                        // Imprimir cada línea leída
+                        System.out.println(linea);
+                    }
+
+                } catch (IOException e) {
+                    // Manejar excepción en caso de error
+                    System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
+                }
+            } else {
+                System.out.println(parametros.get(0).valor);
+            }
+        } else {
+            System.out.println("Error in line " + (currentLine - 1) + ". print: Only one parameter is expected");
+            System.exit(0);
+        }
+
     }
 
     // Busca si existe la palabra en un archivo recibe palabra y nombre del archivo
